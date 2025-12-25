@@ -43,9 +43,11 @@
         margin-bottom: 50px;
     }
     .header-content { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+    
     .logo-link { display: inline-block; transition: transform 0.3s; }
     .logo-link:hover { transform: scale(1.05); }
     .logo-img { width: 110px; height: auto; margin-bottom: 20px; display: block; }
+    
     .site-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0; color: var(--c-white); letter-spacing: 1px; }
     .site-subtitle { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 4px; color: var(--c-gold); margin-top: 8px; font-weight: 500; }
 
@@ -75,70 +77,122 @@
     .section-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--c-black); margin: 0; font-weight: 600; }
     .card-body { padding: 30px; }
 
-    /* --- WIDGETS --- */
-    .widget-grid {
-        display: grid; 
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
-        gap: 16px;
-        margin-bottom: 25px;
-    }
-    .instruction-box {
-        background: #fffbee;
-        border-left: 4px solid var(--c-gold);
-        padding: 15px;
-        font-size: 0.85rem;
-        color: #856404;
-        margin-bottom: 20px;
-        border-radius: 0 4px 4px 0;
-    }
-
     /* --- FORMS & INPUTS --- */
     .form-group {
         display: flex; align-items: center; justify-content: space-between;
         margin-bottom: 15px; flex-wrap: wrap;
     }
+    
     .label-col { flex: 1; padding-right: 20px; min-width: 220px; }
     .label-main { display: block; font-weight: 600; color: var(--c-text); font-size: 0.95rem; }
     .label-sub { display: block; font-size: 0.8rem; color: var(--c-text-muted); margin-top: 4px; font-weight: 400; }
+
     .input-col { position: relative; width: 160px; }
+
     .input-field {
-        width: 100%; padding: 12px 45px 12px 15px; 
+        width: 100%; 
+        padding: 12px 45px 12px 15px; 
         font-family: 'Montserrat', sans-serif; font-size: 1rem;
         border: 1px solid #e0e0e0; border-radius: 6px;
         text-align: right; background: #fafafa; color: var(--c-black);
+        transition: border-color 0.3s, background 0.3s;
     }
     .input-field:focus { border-color: var(--c-gold); background-color: #fff; outline: none; }
-    .currency-symbol { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #aaa; pointer-events: none; }
+    .input-text-left { text-align: left; padding-right: 15px; }
+    
+    .currency-symbol {
+        position: absolute; right: 15px; top: 50%;
+        transform: translateY(-50%); color: #aaa; pointer-events: none;
+    }
 
-    /* --- ASSET SECTIONS --- */
+    /* --- ASSET SECTIONS (AVOIRS) --- */
     .asset-section {
-        background-color: #fcfcfc; border-left: 4px solid var(--c-border);
-        padding: 20px 25px; border-radius: 0 8px 8px 0; margin-bottom: 25px;
+        background-color: #fcfcfc;
+        border-left: 4px solid var(--c-border);
+        padding: 20px 25px;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 25px;
         transition: all 0.3s ease;
     }
-    .asset-section:hover { border-left-color: var(--c-gold); background-color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-    .asset-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .asset-section:hover {
+        border-left-color: var(--c-gold);
+        background-color: #fff;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .asset-header {
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;
+    }
     .asset-icon { font-size: 1.2rem; color: var(--c-gold); }
     .asset-title { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.1rem; color: var(--c-black); margin: 0; }
-    .asset-desc { display: block; font-size: 0.75rem; color: #888; margin-top: 2px; }
+    .asset-desc { display: block; font-size: 0.75rem; color: #888; margin-top: 2px; font-weight: 400; font-family: 'Montserrat', sans-serif; }
 
     /* --- DATE SYNC --- */
     .date-sync-row { display: flex; gap: 20px; align-items: center; width: 100%; }
     .date-block { flex: 1; position: relative; }
-    .date-block label { display: block; font-size: 0.75rem; text-transform: uppercase; color: #999; margin-bottom: 5px; font-weight: 600; }
+    .date-block label { display: block; font-size: 0.75rem; text-transform: uppercase; color: #999; margin-bottom: 5px; font-weight: 600; letter-spacing: 1px; }
     .date-icon-separator { color: var(--c-gold); font-size: 1.2rem; padding-top: 20px; }
 
     /* DYNAMIC ROWS */
     .dynamic-list { width: 100%; margin-bottom: 15px; }
-    .row-bank, .row-currency {
+    
+    .row-bank {
         display: flex; gap: 10px; margin-bottom: 10px; align-items: center;
         background: #fff; padding: 8px; border: 1px solid #eee; border-radius: 6px;
     }
-    .row-currency { display: grid; grid-template-columns: 1.5fr 1fr 1fr 30px; }
+    .row-bank .input-name { flex: 2; }
+    .row-bank .input-amount { flex: 1; min-width: 100px; }
 
-    .btn-remove { background: #ffebeb; color: var(--c-danger); border: 1px solid #fadbd8; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; }
-    .btn-add { background: transparent; border: 1px dashed var(--c-gold); color: var(--c-gold); padding: 8px 15px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
+    .row-currency {
+        display: grid; grid-template-columns: 1.5fr 1fr 1fr 30px; gap: 10px;
+        margin-bottom: 10px; align-items: center;
+        background: #fff; padding: 8px; border: 1px solid #eee; border-radius: 6px;
+    }
+
+    .btn-remove {
+        background: #ffebeb; color: var(--c-danger); border: 1px solid #fadbd8;
+        width: 30px; height: 30px; border-radius: 4px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .btn-add {
+        background: transparent; border: 1px dashed var(--c-gold); color: var(--c-gold);
+        padding: 8px 15px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;
+        font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-top: 5px;
+    }
+    .btn-add:hover { background: var(--c-gold-light); }
+    
     .sub-total-display { text-align: right; font-size: 0.85rem; color: var(--c-gold); font-weight: 600; margin-top: 10px; }
+    .source-citation { font-size: 0.7rem; color: #aaa; text-align: right; margin-top: 5px; font-style: italic; }
+    .source-citation a { color: #aaa; text-decoration: underline; }
+
+    /* --- NOUVEAU MODULE COURS (SECTION 2) --- */
+    .widget-grid {
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+        gap: 16px; margin-bottom: 25px;
+    }
+    .instruction-box {
+        background: #fffbee; border-left: 4px solid var(--c-gold);
+        padding: 15px; font-size: 0.85rem; color: #856404;
+        margin-bottom: 20px; border-radius: 0 4px 4px 0;
+    }
+    .metal-calc-row {
+        display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+        gap: 12px; align-items: flex-end; margin-bottom: 20px;
+        padding-bottom: 20px; border-bottom: 1px dashed #eee;
+    }
+    .metal-calc-row:last-child { border-bottom: none; }
+    
+    .input-wrapper { display: flex; flex-direction: column; gap: 4px; }
+    .input-wrapper label { font-size: 0.8rem; color: var(--c-text-muted); font-weight: 400; }
+
+    .field-calculated { background-color: #fffde7 !important; border-color: #fbc02d !important; font-weight: 700; color: #5f4b00; }
+    .field-forced { border: 2px solid #f39c12 !important; background-color: #fff !important; }
+
+    /* METAL INPUTS (Section 3) */
+    .metal-row-inputs { display: flex; gap: 10px; align-items: center; justify-content: flex-end; width: 100%; }
+    .metal-input-wrapper { position: relative; width: 130px; }
+    .metal-label { font-size: 0.7rem; text-transform: uppercase; color: #999; margin-bottom: 2px; text-align: right; display: block;}
 
     /* SIDEBAR & RESULT */
     .sidebar { position: sticky; top: 30px; }
@@ -148,18 +202,27 @@
     .summary-body { padding: 25px; }
     .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.95rem; border-bottom: 1px solid #333; padding-bottom: 10px; color: #ddd; }
     .net-asset-row { margin-top: 20px; padding-top: 15px; border-top: 1px solid #555; font-weight: 600; font-size: 1.1rem; color: var(--c-white); }
+    
     .final-box { background: var(--c-white); color: var(--c-black); padding: 25px; border-radius: 8px; text-align: center; margin-top: 25px; opacity: 0.4; }
     .final-box .amount { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; display: block; line-height: 1.1; }
     .final-box .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--c-gold); font-weight: 700; }
+    
     .actions-area { margin-top: 30px; display: flex; flex-direction: column; gap: 10px; }
     .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; transition: 0.3s; }
     .btn-excel { background-color: var(--c-btn-excel); color: white; }
+    .btn-excel:hover { background-color: #1e663e; }
     .btn-reset { background-color: transparent; border: 1px solid #555; color: #999; }
+    .btn-reset:hover { border-color: #aaa; color: #fff; }
 
     @media (max-width: 900px) { 
         .main-container { grid-template-columns: 1fr; } 
         .sidebar { position: static; } 
-        .row-currency { grid-template-columns: 1fr; }
+        .metal-row-inputs { flex-direction: column; width: 100%; } 
+        .metal-input-wrapper { width: 100%; } 
+        .date-sync-row { flex-direction: column; gap: 10px; }
+        .date-icon-separator { transform: rotate(90deg); padding: 0; }
+        .row-currency { grid-template-columns: 1fr; } 
+        .metal-calc-row { grid-template-columns: 1fr 1fr; } 
     }
 </style>
 </head>
@@ -187,13 +250,13 @@
             <div class="card-body">
                 <div class="date-sync-row">
                     <div class="date-block">
-                        <label>Date Grégorienne</label>
-                        <input type="date" id="gregorianDate" class="input-field" style="text-align:left; background:white; cursor:pointer;" onchange="handleDateChange()">
+                        <label>Date Grégorienne (Calendrier)</label>
+                        <input type="date" id="gregorianDate" class="input-field input-text-left" style="background:white; cursor:pointer;" onchange="handleDateChange()">
                     </div>
                     <div class="date-icon-separator">⇄</div>
                     <div class="date-block">
-                        <label>Date Hégirienne (Estimée)</label>
-                        <input type="text" id="hijriOutput" class="input-field" style="text-align:left; background:#fdfaf2; color:var(--c-gold); font-weight:600;" placeholder="jj/mm/aaaa">
+                        <label>Date Hégirienne (Estimée / Modifiable)</label>
+                        <input type="text" id="hijriOutput" class="input-field input-text-left" style="background:#fdfaf2; color:var(--c-gold); font-weight:600; border-color:#e8dfc8;" placeholder="jj/mm/aaaa">
                     </div>
                 </div>
             </div>
@@ -207,45 +270,54 @@
             <div class="card-body">
                 
                 <div class="instruction-box">
-                    <strong>Action requise :</strong> Relevez le prix du gramme (<strong>"1 g"</strong>) sur les graphiques ci-dessous et saisissez-les dans les cases correspondantes pour activer le calcul.
+                    <strong>Action requise :</strong> Relevez le prix de l'Oz sur les graphiques ci-dessous et reportez-les dans les cases correspondantes.
                 </div>
 
                 <div class="widget-grid">
-                    <iframe
-                      src="https://goldbroker.com/widget/live-price/XAU?currency=EUR&weight=g"
-                      width="100%" height="130"
-                      style="border:1px solid #eee; border-radius:8px; overflow:hidden;"
-                      frameborder="0"
-                    ></iframe>
-
-                    <iframe
-                      src="https://goldbroker.com/widget/live-price/XAG?currency=EUR&weight=g"
-                      width="100%" height="130"
-                      style="border:1px solid #eee; border-radius:8px; overflow:hidden;"
-                      frameborder="0"
-                    ></iframe>
+                    <iframe src="https://goldbroker.com/widget/live-price/XAU?currency=EUR" width="100%" height="130" style="border:1px solid #eee; border-radius:8px; overflow:hidden;" frameborder="0"></iframe>
+                    <iframe src="https://goldbroker.com/widget/live-price/XAG?currency=EUR" width="100%" height="130" style="border:1px solid #eee; border-radius:8px; overflow:hidden;" frameborder="0"></iframe>
                 </div>
 
-                <div class="form-group">
-                    <div class="label-col">
-                        <span class="label-main">Prix du gramme d'Argent (€)</span>
+                <div class="metal-calc-row">
+                    <div class="input-wrapper">
+                        <span class="label-main">Prix de l'Argent (€)</span>
                         <span class="label-sub">Nisâb = 595g d'argent</span>
                     </div>
-                    <div class="input-col">
-                        <input type="number" id="priceSilver" class="input-field" placeholder="0.00" step="0.01" oninput="updateMetalsFromRate()">
-                        <span class="currency-symbol">€</span>
+                    <div class="input-wrapper">
+                        <label>Valeur Oz</label>
+                        <input type="number" id="ozSilver" class="input-field" placeholder="0.00" oninput="updateMetalRates()">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Prix g (Calc)</label>
+                        <input type="number" id="calcSilver" class="input-field field-calculated" readonly>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Forcer g</label>
+                        <input type="number" id="forceSilver" class="input-field field-forced" placeholder="0.00" oninput="updateMetalRates()">
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div class="label-col">
-                        <span class="label-main">Prix du gramme d'Or (€)</span>
+                <div class="metal-calc-row">
+                    <div class="input-wrapper">
+                        <span class="label-main">Prix de l'Or (€)</span>
                         <span class="label-sub">Référence patrimoine Or</span>
                     </div>
-                    <div class="input-col">
-                        <input type="number" id="priceGold" class="input-field" placeholder="0.00" step="0.01" oninput="updateMetalsFromRate()">
-                        <span class="currency-symbol">€</span>
+                    <div class="input-wrapper">
+                        <label>Valeur Oz</label>
+                        <input type="number" id="ozGold" class="input-field" placeholder="0.00" oninput="updateMetalRates()">
                     </div>
+                    <div class="input-wrapper">
+                        <label>Prix g (Calc)</label>
+                        <input type="number" id="calcGold" class="input-field field-calculated" readonly>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Forcer g</label>
+                        <input type="number" id="forceGold" class="input-field field-forced" placeholder="0.00" oninput="updateMetalRates()">
+                    </div>
+                </div>
+
+                <div class="source-citation">
+                    Source indicative : <a href="https://goldbroker.com" target="_blank">GoldBroker.com</a>
                 </div>
             </div>
         </div>
@@ -260,7 +332,10 @@
                 <div class="asset-section">
                     <div class="asset-header">
                         <span class="asset-icon">🏦</span>
-                        <h3 class="asset-title">Comptes Bancaires</h3>
+                        <div>
+                            <h3 class="asset-title">Comptes Bancaires</h3>
+                            <span class="asset-desc">Courant, Livret A, LDD, Épargne...</span>
+                        </div>
                     </div>
                     <div id="bankRows" class="dynamic-list"></div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -272,22 +347,33 @@
                 <div class="asset-section">
                     <div class="asset-header">
                         <span class="asset-icon">🌍</span>
-                        <h3 class="asset-title">Devises Étrangères</h3>
+                        <div>
+                            <h3 class="asset-title">Devises Étrangères</h3>
+                            <span class="asset-desc">Conversion automatique au taux du jour.</span>
+                        </div>
                     </div>
                     <div id="currencyRows" class="dynamic-list"></div>
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <button class="btn-add" onclick="addCurrencyRow()">+ Ajouter une devise</button>
-                        <div class="sub-total-display">Total : <span id="totalCurrency">0,00 €</span></div>
+                        <div style="text-align:right;">
+                            <div class="sub-total-display">Total : <span id="totalCurrency">0,00 €</span></div>
+                            <div class="source-citation">Taux : <a href="https://www.exchangerate-api.com/" target="_blank">ExchangeRate-API</a></div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="asset-section">
                     <div class="asset-header">
                         <span class="asset-icon">💶</span>
-                        <h3 class="asset-title">Espèces</h3>
+                        <div>
+                            <h3 class="asset-title">Espèces</h3>
+                            <span class="asset-desc">Argent liquide disponible (Maison, Coffre).</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <div class="label-col"><span class="label-main">Argent liquide</span></div>
+                        <div class="label-col">
+                            <span class="label-main">Montant Total</span>
+                        </div>
                         <div class="input-col">
                             <input type="number" id="cash" class="input-field" placeholder="0" oninput="calculate()">
                             <span class="currency-symbol">€</span>
@@ -298,17 +384,26 @@
                 <div class="asset-section">
                     <div class="asset-header">
                         <span class="asset-icon">🧈</span>
-                        <h3 class="asset-title">Or Physique</h3>
-                    </div>
-                    <div class="metal-row-inputs">
-                        <div class="metal-input-wrapper">
-                            <span class="metal-label">Poids (g)</span>
-                            <input type="number" id="goldWeight" class="input-field" placeholder="0g" oninput="convertGold('weight')">
+                        <div>
+                            <h3 class="asset-title">Or Physique</h3>
+                            <span class="asset-desc">Lingots, pièces. (Hors bijoux portés).</span>
                         </div>
-                        <div style="color:#aaa;">⇄</div>
-                        <div class="metal-input-wrapper">
-                            <span class="metal-label">Valeur (€)</span>
-                            <input type="number" id="goldValue" class="input-field" placeholder="0€" oninput="convertGold('value')">
+                    </div>
+                    <div class="form-group" style="align-items:flex-start; margin-bottom:0;">
+                        <div class="label-col">
+                            <span class="label-main">Valeur calculée</span>
+                            <span class="label-sub">Saisissez le poids OU la valeur</span>
+                        </div>
+                        <div class="metal-row-inputs">
+                            <div class="metal-input-wrapper">
+                                <span class="metal-label">Poids (g)</span>
+                                <input type="number" id="goldWeight" class="input-field" placeholder="0g" oninput="convertGold('weight')">
+                            </div>
+                            <div style="color:#aaa;">⇄</div>
+                            <div class="metal-input-wrapper">
+                                <span class="metal-label">Valeur (€)</span>
+                                <input type="number" id="goldValue" class="input-field" placeholder="0€" oninput="convertGold('value')">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -316,34 +411,48 @@
                 <div class="asset-section">
                     <div class="asset-header">
                         <span class="asset-icon">🥈</span>
-                        <h3 class="asset-title">Argent Physique</h3>
-                    </div>
-                    <div class="metal-row-inputs">
-                        <div class="metal-input-wrapper">
-                            <span class="metal-label">Poids (g)</span>
-                            <input type="number" id="silverWeight" class="input-field" placeholder="0g" oninput="convertSilver('weight')">
+                        <div>
+                            <h3 class="asset-title">Argent Physique</h3>
+                            <span class="asset-desc">Lingots, pièces argent.</span>
                         </div>
-                        <div style="color:#aaa;">⇄</div>
-                        <div class="metal-input-wrapper">
-                            <span class="metal-label">Valeur (€)</span>
-                            <input type="number" id="silverValue" class="input-field" placeholder="0€" oninput="convertSilver('value')">
+                    </div>
+                    <div class="form-group" style="align-items:flex-start; margin-bottom:0;">
+                        <div class="label-col">
+                            <span class="label-main">Valeur calculée</span>
+                        </div>
+                        <div class="metal-row-inputs">
+                            <div class="metal-input-wrapper">
+                                <span class="metal-label">Poids (g)</span>
+                                <input type="number" id="silverWeight" class="input-field" placeholder="0g" oninput="convertSilver('weight')">
+                            </div>
+                            <div style="color:#aaa;">⇄</div>
+                            <div class="metal-input-wrapper">
+                                <span class="metal-label">Valeur (€)</span>
+                                <input type="number" id="silverValue" class="input-field" placeholder="0€" oninput="convertSilver('value')">
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="asset-section" style="border-left-color:#2980b9; background-color:#ebf5fb; margin-bottom:0;">
-                    <div class="asset-header">
+                
+                <div class="asset-section" style="border-left-color:#2980b9; background-color:#ebf5fb;">
+                    <div class="asset-header" style="border-bottom-color:#d6eaf8;">
                         <span class="asset-icon" style="color:#2980b9;">🤝</span>
-                        <h3 class="asset-title" style="color:#2980b9;">Créances</h3>
+                        <div>
+                            <h3 class="asset-title" style="color:#2980b9;">Créances</h3>
+                            <span class="asset-desc" style="color:#5499c7;">Argent qu'on vous doit (Informatif, hors calcul).</span>
+                        </div>
                     </div>
                     <div class="form-group" style="margin-bottom:0;">
-                        <div class="label-col"><span class="label-main" style="color:#2980b9;">Argent qu'on vous doit</span></div>
+                        <div class="label-col">
+                            <span class="label-main" style="color:#2980b9;">Montant</span>
+                        </div>
                         <div class="input-col">
-                            <input type="number" id="receivables" class="input-field" placeholder="0" style="background:white; border-color:#d6eaf8;">
+                            <input type="number" id="receivables" class="input-field" style="background:#fff; color:#2980b9; border-color:#d6eaf8;" placeholder="0">
                             <span class="currency-symbol">€</span>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -356,7 +465,7 @@
                 <div class="form-group">
                     <div class="label-col">
                         <span class="label-main" style="color:var(--c-danger);">Dettes immédiates</span>
-                        <span class="label-sub">À régler ce mois-ci (factures, loyer dû).</span>
+                        <span class="label-sub">Factures, loyers dus, mensualités à régler ce mois-ci.</span>
                     </div>
                     <div class="input-col">
                         <input type="number" id="debts" class="input-field" style="background:#fffafa; color:var(--c-danger); border-color:#fadbd8;" placeholder="0" oninput="calculate()">
@@ -374,18 +483,23 @@
                 <h3 class="summary-title">Synthèse</h3>
             </div>
             <div class="summary-body">
+                
                 <div style="background:rgba(197,160,101,0.1); border:1px solid rgba(197,160,101,0.4); padding:15px; border-radius:6px; text-align:center; margin-bottom:30px;">
                     <span class="val" id="nisabDisplay" style="display:block; color:var(--c-gold); font-family:'Playfair Display', serif; font-size:1.5rem;">0,00 €</span>
                     <span class="lbl" style="color:#aaa; font-size:0.7rem; text-transform:uppercase;">Seuil Nisâb (Argent 595g)</span>
                 </div>
+
                 <div class="summary-row"><span>Total Actifs</span><span id="resAssets">0,00 €</span></div>
                 <div class="summary-row"><span>Dettes</span><span id="resDebts" style="color:#e74c3c;">- 0,00 €</span></div>
                 <div class="summary-row net-asset-row"><span>Assiette Zakatable</span><span id="resNet">0,00 €</span></div>
+
                 <div id="statusBox" style="text-align:center; font-size:0.85rem; margin-top:20px; padding:10px; border-radius:4px; font-weight:500; display:none;"></div>
+
                 <div class="final-box" id="finalBox">
                     <span class="amount" id="zakatAmount">0 €</span>
                     <span class="label">Zakât à payer (2.5%)</span>
                 </div>
+
                 <div class="actions-area">
                     <button class="btn-action btn-excel" onclick="exportToExcelPro()">📥 Export Excel</button>
                     <button class="btn-action btn-reset" onclick="resetAll()">↻ Remise à zéro</button>
@@ -397,19 +511,51 @@
 </div>
 
 <script>
+    /* --- CONFIGURATION --- */
     const CURRENCY_LIST = [
-        { code: "MAD", label: "Dirham (DH) - Maroc" }, { code: "DZD", label: "Dinar (DA) - Algérie" },
-        { code: "TND", label: "Dinar (DT) - Tunisie" }, { code: "USD", label: "Dollar ($) - E-U" },
-        { code: "GBP", label: "Livre (£) - Royaume-Uni" }, { code: "CHF", label: "Franc (CHF) - Suisse" },
-        { code: "CAD", label: "Dollar ($) - Canada" }, { code: "AED", label: "Dirham (AED) - Emirats" },
-        { code: "SAR", label: "Riyal (SAR) - Arabie S." }, { code: "TRY", label: "Lire (₺) - Turquie" },
+        { code: "MAD", label: "Dirham (DH) - Maroc" },
+        { code: "DZD", label: "Dinar (DA) - Algérie" },
+        { code: "TND", label: "Dinar (DT) - Tunisie" },
+        { code: "USD", label: "Dollar ($) - E-U" },
+        { code: "GBP", label: "Livre (£) - Royaume-Uni" },
+        { code: "CHF", label: "Franc (CHF) - Suisse" },
+        { code: "CAD", label: "Dollar ($) - Canada" },
+        { code: "AED", label: "Dirham (AED) - Emirats" },
+        { code: "SAR", label: "Riyal (SAR) - Arabie S." },
+        { code: "TRY", label: "Lire (₺) - Turquie" },
         { code: "XOF", label: "Franc CFA (XOF) - Ouest" }
     ];
     let exchangeRates = {};
 
+    /* --- NOUVEAU MODULE LOGIQUE (OZ -> GRAMME) --- */
+    const OZ_TO_G = 31.1035;
+
+    function updateMetalRates() {
+        // Récupération des valeurs Oz
+        const ozS = parseFloat(document.getElementById('ozSilver').value) || 0;
+        const ozG = parseFloat(document.getElementById('ozGold').value) || 0;
+        
+        // Calcul automatique dans les cases jaunes (Oz / 31.1035)
+        document.getElementById('calcSilver').value = (ozS / OZ_TO_G).toFixed(4);
+        document.getElementById('calcGold').value = (ozG / OZ_TO_G).toFixed(4);
+        
+        // Met à jour les calculs des actifs
+        updateMetalsFromRate(); 
+    }
+
+    function getEffectiveRate(metal) {
+        // metal doit être 'Silver' ou 'Gold'
+        const force = parseFloat(document.getElementById('force' + metal).value);
+        const calc = parseFloat(document.getElementById('calc' + metal).value) || 0;
+        // Si une valeur est forcée (>0), on l'utilise, sinon on prend le calculé
+        return (force > 0) ? force : calc;
+    }
+
+    /* --- INITIALISATION --- */
     window.onload = async function() {
         document.getElementById('gregorianDate').valueAsDate = new Date();
-        handleDateChange(); addBankRow();
+        handleDateChange();
+        addBankRow();
         try {
             const res = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
             const data = await res.json();
@@ -418,6 +564,7 @@
         calculate();
     };
 
+    /* --- LOGIC --- */
     function handleDateChange() {
         const inputDate = new Date(document.getElementById('gregorianDate').value);
         try {
@@ -428,32 +575,32 @@
     }
 
     function convertGold(origin) {
-        const price = parseFloat(document.getElementById('priceGold').value) || 0;
+        // UTILISATION DU NOUVEAU MODULE
+        const price = getEffectiveRate('Gold');
         const weightInput = document.getElementById('goldWeight');
         const valueInput = document.getElementById('goldValue');
-        if (origin === 'weight') valueInput.value = (parseFloat(weightInput.value) * price).toFixed(2);
-        else if(price > 0) weightInput.value = (parseFloat(valueInput.value) / price).toFixed(2);
+        if (origin === 'weight') { valueInput.value = (parseFloat(weightInput.value) * price).toFixed(2); } 
+        else { if(price > 0) weightInput.value = (parseFloat(valueInput.value) / price).toFixed(2); }
         calculate();
     }
-
     function convertSilver(origin) {
-        const price = parseFloat(document.getElementById('priceSilver').value) || 0;
+        // UTILISATION DU NOUVEAU MODULE
+        const price = getEffectiveRate('Silver');
         const weightInput = document.getElementById('silverWeight');
         const valueInput = document.getElementById('silverValue');
-        if (origin === 'weight') valueInput.value = (parseFloat(weightInput.value) * price).toFixed(2);
-        else if(price > 0) weightInput.value = (parseFloat(valueInput.value) / price).toFixed(2);
+        if (origin === 'weight') { valueInput.value = (parseFloat(weightInput.value) * price).toFixed(2); } 
+        else { if(price > 0) weightInput.value = (parseFloat(valueInput.value) / price).toFixed(2); }
         calculate();
     }
-
     function updateMetalsFromRate() { convertGold('weight'); convertSilver('weight'); }
 
     function addBankRow() {
         const div = document.createElement('div');
         div.className = 'row-bank';
-        div.innerHTML = `<input type="text" class="input-field" placeholder="Nom du compte" style="text-align:left; flex:2;">
-                         <input type="number" class="input-field bank-val" placeholder="0" style="flex:1;" oninput="calculate()">
+        div.innerHTML = `<input type="text" class="input-field input-text-left input-name" placeholder="Nom du compte">
+                         <input type="number" class="input-field input-amount bank-val" placeholder="0" oninput="calculate()">
                          <span style="font-size:0.9rem; color:#aaa;">€</span>
-                         <button class="btn-remove" onclick="this.parentElement.remove();calculate();">✖</button>`;
+                         <button class="btn-remove" onclick="removeRow(this)">✖</button>`;
         document.getElementById('bankRows').appendChild(div);
     }
     
@@ -462,10 +609,16 @@
         div.className = 'row-currency';
         let options = "";
         CURRENCY_LIST.forEach(curr => { options += `<option value="${curr.code}">${curr.label}</option>`; });
-        div.innerHTML = `<select class="input-field curr-select" style="text-align:left;" onchange="updateCurrencyRow(this)">${options}</select>
-                         <input type="number" class="input-field curr-amount" placeholder="Mnt" oninput="updateCurrencyRow(this)">
-                         <div style="position:relative;"><input type="number" class="input-field curr-euro-val" placeholder="€" readonly style="background:#eee;"><span class="currency-symbol">€</span></div>
-                         <button class="btn-remove" onclick="this.parentElement.remove();calculate();">✖</button>`;
+        options += `<option disabled>──────────</option>`;
+        if(Object.keys(exchangeRates).length > 0) {
+             Object.keys(exchangeRates).sort().forEach(c => {
+                 if(!CURRENCY_LIST.some(item => item.code === c)) { options += `<option value="${c}">${c}</option>`; }
+             });
+        }
+        div.innerHTML = `<select class="input-field input-text-left curr-select" onchange="updateCurrencyRow(this)">${options}</select>
+                         <div style="position:relative;"><input type="number" class="input-field curr-amount" placeholder="Mnt" oninput="updateCurrencyRow(this)"></div>
+                         <div style="position:relative;"><input type="number" class="input-field curr-euro-val" placeholder="€" readonly style="background:#eee; color:#555;"><span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:0.8rem; color:#999;">€</span></div>
+                         <button class="btn-remove" onclick="removeRow(this)">✖</button>`;
         document.getElementById('currencyRows').appendChild(div);
     }
 
@@ -475,10 +628,13 @@
         row.querySelector('.curr-euro-val').value = (parseFloat(row.querySelector('.curr-amount').value) / rate).toFixed(2);
         calculate();
     }
+    function removeRow(btn) { btn.parentElement.remove(); calculate(); }
 
     function calculate() {
         const fmt = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
-        const silverRate = parseFloat(document.getElementById('priceSilver').value) || 0;
+        
+        // UTILISATION DU NOUVEAU MODULE POUR LE NISAB
+        const silverRate = getEffectiveRate('Silver');
         const nisab = silverRate * 595;
         document.getElementById('nisabDisplay').innerText = fmt.format(nisab);
 
@@ -510,17 +666,38 @@
 
     function exportToExcelPro() {
         const wb = XLSX.utils.book_new();
-        const headers = [ "Date Calcul", "Date Hégirienne", "Seuil Nisab (€)", "Total Actifs (€)", "Dettes (€)", "A PAYER (€)" ];
+        const headers = [ "Date Calcul", "Date Hégirienne", "Cours Argent (€/g)", "Cours Or (€/g)", "Seuil Nisab (€)", "Total Banques (€)", "Total Devises (€)", "Espèces (€)", "Or Phys. (g)", "Or Phys. (€)", "Arg. Phys. (g)", "Arg. Phys. (€)", "Total Actifs (€)", "Dettes (€)", "Assiette Zakat (€)", "A PAYER (€)" ];
+        
+        // Adaptation pour récupérer le taux effectif
+        const rateSilver = getEffectiveRate('Silver');
+        const rateGold = getEffectiveRate('Gold');
+
         const rowValues = [
-            document.getElementById('gregorianDate').value, document.getElementById('hijriOutput').value,
+            document.getElementById('gregorianDate').value,
+            document.getElementById('hijriOutput').value,
+            rateSilver,
+            rateGold,
             parseFloat(document.getElementById('nisabDisplay').innerText.replace(/[^\d,-]/g,'').replace(',','.')),
+            parseFloat(document.getElementById('totalBank').innerText.replace(/[^\d,-]/g,'').replace(',','.')),
+            parseFloat(document.getElementById('totalCurrency').innerText.replace(/[^\d,-]/g,'').replace(',','.')),
+            parseFloat(document.getElementById('cash').value) || 0,
+            parseFloat(document.getElementById('goldWeight').value) || 0,
+            parseFloat(document.getElementById('goldValue').value) || 0,
+            parseFloat(document.getElementById('silverWeight').value) || 0,
+            parseFloat(document.getElementById('silverValue').value) || 0,
             parseFloat(document.getElementById('resAssets').innerText.replace(/[^\d,-]/g,'').replace(',','.')),
             parseFloat(document.getElementById('debts').value) || 0,
+            parseFloat(document.getElementById('resNet').innerText.replace(/[^\d,-]/g,'').replace(',','.')),
             parseFloat(document.getElementById('zakatAmount').innerText.replace(/[^\d,-]/g,'').replace(',','.'))
         ];
         const ws = XLSX.utils.aoa_to_sheet([headers, rowValues]);
-        XLSX.utils.book_append_sheet(wb, ws, "Zakat");
-        XLSX.writeFile(wb, "Zakat_Export.xlsx");
+        const headerStyle = { fill: { fgColor: { rgb: "1A1A1A" } }, font: { color: { rgb: "C5A065" }, bold: true, name: "Arial" }, alignment: { horizontal: "center", vertical: "center" }, border: { bottom: { style: "medium", color: { rgb: "C5A065" } } } };
+        for(let c=0; c < headers.length; c++) { const cellRef = XLSX.utils.encode_cell({c:c, r:0}); if(ws[cellRef]) ws[cellRef].s = headerStyle; }
+        const moneyStyle = { numFmt: "#,##0.00 €", alignment: { horizontal: "center" } };
+        for(let c=2; c < headers.length; c++) { const cellRef = XLSX.utils.encode_cell({c:c, r:1}); if(ws[cellRef]) ws[cellRef].s = moneyStyle; }
+        ws['!cols'] = Array(headers.length).fill({ wch: 18 });
+        XLSX.utils.book_append_sheet(wb, ws, "Donnees_Zakat");
+        XLSX.writeFile(wb, "Zakat_Export_Ihsan.xlsx");
     }
 
     function resetAll() {
