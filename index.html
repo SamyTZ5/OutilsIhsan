@@ -105,6 +105,13 @@
         transform: translateY(-50%); color: #aaa; pointer-events: none;
     }
 
+    /* --- SOURCES CITATION --- */
+    .source-citation {
+        font-size: 0.7rem; color: #aaa; text-align: right; margin-top: 10px; font-style: italic;
+    }
+    .source-citation a { color: #aaa; text-decoration: underline; }
+    .source-citation a:hover { color: var(--c-gold); }
+
     /* --- DATE SYNC ROW --- */
     .date-sync-row {
         display: flex; gap: 20px; align-items: center; width: 100%;
@@ -127,7 +134,7 @@
     .row-bank .input-amount { flex: 1; min-width: 100px; }
 
     .row-currency {
-        display: grid; grid-template-columns: 1.5fr 1fr 1fr 30px; gap: 10px; /* Select plus large */
+        display: grid; grid-template-columns: 1.5fr 1fr 1fr 30px; gap: 10px;
         margin-bottom: 10px; align-items: center;
         background: #fdfdfd; padding: 10px; border: 1px solid #eee; border-radius: 6px;
     }
@@ -248,7 +255,7 @@
                         <span class="label-sub">Seuil Nisâb = 595g d'argent</span>
                     </div>
                     <div class="input-col">
-                        <input type="number" id="priceSilver" class="input-field" value="0.95" step="0.01" oninput="updateMetalsFromRate()">
+                        <input type="number" id="priceSilver" class="input-field" value="1.05" step="0.01" oninput="updateMetalsFromRate()">
                         <span class="currency-symbol">€</span>
                     </div>
                 </div>
@@ -259,10 +266,15 @@
                         <span class="label-sub">Référence patrimoine Or</span>
                     </div>
                     <div class="input-col">
-                        <input type="number" id="priceGold" class="input-field" value="70.50" step="0.01" oninput="updateMetalsFromRate()">
+                        <input type="number" id="priceGold" class="input-field" value="84.50" step="0.01" oninput="updateMetalsFromRate()">
                         <span class="currency-symbol">€</span>
                     </div>
                 </div>
+                
+                <div class="source-citation">
+                    Source indicative : <a href="https://www.24hgold.com/francais/cours_or_argent.aspx" target="_blank">24hGold.com</a>
+                </div>
+
             </div>
         </div>
 
@@ -290,7 +302,12 @@
 
                     <div id="currencyRows" class="dynamic-list"></div>
                     <button class="btn-add" onclick="addCurrencyRow()">+ Ajouter une devise</button>
-                    <div class="sub-total-display">Total Devises (converti) : <span id="totalCurrency">0,00 €</span></div>
+                    <div class="sub-total-display">
+                        Total Devises (converti) : <span id="totalCurrency">0,00 €</span>
+                        <div class="source-citation">
+                            Taux fournis par <a href="https://www.exchangerate-api.com/" target="_blank">ExchangeRate-API</a>
+                        </div>
+                    </div>
                 </div>
 
                 <hr style="border:0; border-top:1px dashed #eee; margin:20px 0;">
