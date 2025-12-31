@@ -78,16 +78,15 @@
 
     .tools-grid {
         display: flex;
-        flex-wrap: nowrap; /* Empêche le retour à la ligne */
-        justify-content: space-between;
-        gap: 20px;
+        flex-wrap: nowrap; /* Force l'alignement horizontal sur ordinateur */
+        justify-content: center;
+        gap: 25px;
         margin-top: 20px;
+        width: 100%;
     }
 
     /* --- CARDS --- */
     .tool-card {
-        flex: 1; /* Force les cartes à avoir toutes la même largeur égale */
-        min-width: 0; /* Important pour éviter que le texte ne force l'élargissement */
         background: var(--c-white);
         border: 1px solid var(--c-gold-border);
         border-radius: var(--radius);
@@ -95,15 +94,22 @@
         text-align: center;
         transition: all 0.3s ease;
         box-shadow: var(--shadow);
+        
+        /* --- LES LIGNES CLÉS POUR LA HAUTEUR ÉGALE --- */
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100%;
+        flex-direction: column; /* Aligne les éléments verticalement */
+        flex: 1;               /* Force chaque carte à prendre la même largeur/hauteur */
+        min-width: 250px;      /* Largeur minimale pour garder du confort */
     }
     
-    @media (max-width: 768px) {
+    /* --- ADAPTATION MOBILE --- */
+    @media (max-width: 900px) {
         .tools-grid {
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Les cartes passent les unes sous les autres sur petit écran */
+        }
+        .tool-card {
+            flex: none;
+            width: 100%; /* Prend toute la largeur sur mobile */
         }
     }
     
@@ -142,7 +148,9 @@
         font-size: 0.95rem;
         color: var(--c-text-muted);
         margin-bottom: 30px;
-        flex-grow: 1; /* Pousse le bouton vers le bas */
+        
+        /* --- POUSSE LE BOUTON VERS LE BAS --- */
+        flex-grow: 1; 
     }
 
     .btn-access {
