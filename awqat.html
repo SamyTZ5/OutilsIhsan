@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Awqat - Institut Ihsan (V2)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@500;700&family=Oswald:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #1a2530; 
+      --card-bg: rgba(255, 255, 255, 0.08); 
+      --card-border: rgba(255, 255, 255, 0.15);
+      --gold: #d4af37; 
+      --white: #ffffff;
+      --news-bg: rgba(0, 0, 0, 0.6); 
+      --news-border: rgba(255, 255, 255, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-color);
+      background-position: center; background-size: cover; background-repeat: no-repeat; background-attachment: fixed;
+      color: var(--white); font-family: 'Inter', sans-serif;
+      height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+    }
+    body::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75); z-index: -1;
+      position: fixed;
+    }
+
+    /* --- ECRAN DEMARRAGE / ONBOARDING --- */
+    #startScreen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95); z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      padding: 20px;
+    }
+    .onboarding-card {
+      background: #151b22; border: 1px solid var(--gold); border-radius: 12px;
+      padding: 40px; max-width: 700px; width: 90%;
+      max-height: 90vh; overflow-y: auto;
+      text-align: left; position: relative;
+    }
+    .onboarding-card h1 { color: var(--gold); font-family: 'Playfair Display'; margin-bottom: 20px; text-align: center; }
+    .steps-list { font-size: 14px; line-height: 1.6; color: #ddd; margin-bottom: 30px; }
+    .steps-list ol { padding-left: 20px; }
+    .steps-list li { margin-bottom: 10px; }
+    .steps-list a { color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold); }
+    
+    .start-input-group { text-align: center; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; }
+    .start-input-group input {
+      background: #222; border: 1px solid #555; padding: 15px; width: 200px; 
+      color: #fff; font-size: 18px; text-align: center; border-radius: 6px;
+      margin-right: 10px;
+    }
+    .start-btn {
+      padding: 15px 30px; background: var(--gold); color: #000; border: none;
+      font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s;
+    }
+    .start-btn:hover { background: #b59230; }
+
+
+    /* HEADER */
+    .top-section {
+      height: 20vh;
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding: 30px 60px 0 60px; z-index: 10;
+    }
+    .mosque-info h1 {
+      font-family: 'Playfair Display', serif; font-size: 3.5vw; color: var(--gold); 
+      margin-bottom: 5px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); margin: 0;
+    }
+    .source-badge { 
+      font-size: 1vw; color: rgba(255,255,255,0.6); font-weight: 300; margin-top: 5px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    /* Indicateur Status + Message */
+    .status-light {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+      background-color: #444; transition: all 0.5s ease;
+    }
+    .status-light.ok { background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+    .status-light.error { background-color: #e74c3c; }
+    
+    #loadingMsg {
+      font-size: 0.9vw; color: var(--gold); font-style: italic; 
+      margin-left: 5px; animation: textPulse 1.5s infinite; display: none;
+    }
+    @keyframes textPulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+
+    .clock-container { text-align: right; }
+    .main-time { 
+      font-family: 'Oswald', sans-serif; font-size: 6vw; line-height: 0.9; font-weight: 500;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .date-group { margin-top: 5px; text-align: right; }
+    .date-gregorian { font-size: 1.2vw; color: #fff; font-weight: 400; display: block; }
+    .date-hijri { font-size: 1.1vw; color: var(--gold); font-weight: 300; display: block; font-family: 'Playfair Display', serif; font-style: italic; }
+
+    /* LAYOUT GLOBAL */
+    .layout-wrapper {
+      width: 92%; max-width: 1600px;
+      margin: 0 auto;
+      flex: 1;
+      display: flex; flex-direction: column; 
+      justify-content: center;
+      padding-bottom: 40px;
+    }
+
+    /* NEWS TICKER */
+    .news-container {
+      width: 100%; 
+      height: 60px; 
+      background: var(--news-bg);
+      border: 1px solid var(--news-border); border-radius: 8px;
+      display: flex; align-items: center; overflow: hidden; position: relative;
+      backdrop-filter: blur(8px);
+      margin-bottom: 25px;
+    }
+    .news-label {
+      background: rgba(255,255,255,0.08); color: var(--gold); height: 100%; padding: 0 30px;
+      display: flex; align-items: center; font-weight: 700; font-size: 16px;
+      text-transform: uppercase; z-index: 2; border-right: 1px solid rgba(255,255,255,0.1);
+      letter-spacing: 1px; min-width: 220px; justify-content: center;
+    }
+    .news-label img { height: 28px; margin-right: 12px; }
+    .news-scroll-area { flex: 1; overflow: hidden; white-space: nowrap; position: relative; }
+    .news-content {
+      display: inline-block; padding-left: 100%;
+      animation: scrollNews 45s linear infinite; 
+      font-size: 22px; 
+      font-weight: 300; color: #fff;
+      line-height: 60px;
+    }
+    @keyframes scrollNews { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+    /* GRILLE PRIERES */
+    .prayers-grid {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 25px; width: 100%; height: 35vh;
+    }
+    .prayer-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; 
+      height: 100%; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      position: relative; transition: all 0.4s ease; backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .prayer-name { 
+      font-family: 'Playfair Display', serif; font-size: 2.2vw; font-weight: 500; 
+      margin-bottom: 15px; color: rgba(255,255,255,0.7); 
+    }
+    .prayer-time { font-family: 'Oswald', sans-serif; font-size: 5.5vw; color: var(--white); }
+
+    .prayer-card.active {
+      background: var(--white); transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-color: var(--white);
+    }
+    .prayer-card.active .prayer-name { color: #1a2530; font-weight: 700; }
+    .prayer-card.active .prayer-time { color: #d4af37; }
+    .prayer-card.active::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
+      background: var(--gold); border-radius: 0 0 12px 12px;
+    }
+
+    /* COUNTDOWN */
+    .countdown-container {
+      margin-top: 25px; display: flex; justify-content: center; width: 100%;
+      padding-bottom: 20px;
+    }
+    .countdown-line {
+      font-family: 'Inter', sans-serif; font-size: 1.3vw; color: var(--white); 
+      text-transform: uppercase; letter-spacing: 2px; font-weight: 600;
+      background: rgba(0, 0, 0, 0.6); padding: 10px 40px; border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.2); 
+      display: flex; align-items: center; gap: 10px;
+    }
+    .countdown-line span { color: var(--gold); }
+
+    /* FOOTER & CONTROLS */
+    .controls-area { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; opacity: 0.1; transition: 0.3s; }
+    .controls-area:hover { opacity: 1; }
+    .ctrl-btn { background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .ctrl-btn:hover { background: var(--gold); color: #000; }
+    .playing { background: var(--gold); color: #000; animation: pulseBtn 1s infinite; }
+    @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+    .ihsan-logo { position: fixed; bottom: 20px; right: 20px; width: 80px; z-index: 900; opacity: 0.8; }
+    .ihsan-logo img { width: 100%; display: block; }
+    .powered-by { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 900; display: flex; flex-direction: column; align-items: center; opacity: 0.5; transition: 0.3s; text-decoration: none; }
+    .powered-by:hover { opacity: 1; }
+    .powered-text { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; color: #888; }
+    .powered-logo { height: 35px; width: auto; }
+
+    /* MODAL */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+    .modal-content { background: #151b22; padding: 30px; border-radius: 12px; width: 90%; max-width: 600px; border: 1px solid #333; max-height: 90vh; overflow-y: auto; color: #fff; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 12px; color: var(--gold); margin-bottom: 5px; text-transform: uppercase; }
+    .form-group input, .form-group select { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; }
+    .btn { width: 100%; padding: 12px; margin-top: 10px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 6px; }
+    #debugConsole { display: none; background: #000; color: #0f0; font-family: monospace; padding: 15px; height: 150px; overflow-y: scroll; border: 1px solid #333; margin-top: 15px; font-size: 11px; }
+
+    /* --- RESPONSIVE MOBILE --- */
+    @media (max-width: 900px) {
+      body { 
+        height: auto; 
+        overflow-y: auto; 
+        padding-bottom: 100px; 
+      }
+      .top-section {
+        height: auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+      }
+      .mosque-info h1 { font-size: 8vw; }
+      .source-badge { font-size: 3vw; justify-content: center; }
+      #loadingMsg { font-size: 3vw; }
+      
+      .clock-container { text-align: center; margin-top: 15px; }
+      .main-time { font-size: 15vw; }
+      .date-group { text-align: center; }
+      .date-gregorian { font-size: 4vw; }
+      .date-hijri { font-size: 3.5vw; }
+
+      .layout-wrapper {
+        justify-content: flex-start;
+        padding-top: 10px;
+        width: 95%;
+      }
+
+      .news-container { margin-bottom: 20px; }
+      .news-label { min-width: 150px; padding: 0 15px; font-size: 12px; }
+      .news-content { font-size: 16px; }
+
+      .prayers-grid {
+        flex-direction: column;
+        height: auto;
+        gap: 12px;
+      }
+      .prayer-card {
+        flex-direction: row; 
+        justify-content: space-between;
+        width: 100%;
+        min-height: 70px;
+        padding: 0 25px;
+      }
+      .prayer-name { font-size: 20px; margin-bottom: 0; }
+      .prayer-time { font-size: 28px; }
+      
+      .prayer-card.active { transform: scale(1.02); }
+      .prayer-card.active::after {
+        width: 6px; height: 100%; bottom: 0; left: 0;
+        border-radius: 12px 0 0 12px;
+      }
+      
+      .countdown-line { font-size: 14px; padding: 12px 20px; width: 100%; justify-content: center; }
+
+      .powered-by { position: relative; left: auto; transform: none; margin-top: 30px; opacity: 1; }
+      .ihsan-logo { position: relative; bottom: auto; right: auto; margin: 20px auto; width: 60px; }
+      .controls-area { position: fixed; opacity: 0.5; bottom: 10px; left: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="startScreen">
+    <div class="onboarding-card">
+      <h1>Configuration Initiale</h1>
+      <div class="steps-list">
+        <ol>
+          <li>Ouvrez <strong><a href="https://www.salatcalendar.com" target="_blank">SalatCalendar.com</a></strong>.</li>
+          <li>Cliquez sur <strong>“Change Location”</strong>, sélectionnez votre ville.</li>
+          <li>Cliquez sur votre ville, puis <strong>ajoutez-la aux favoris</strong> (icône coeur/étoile).</li>
+          <li>Dans le menu de gauche, descendez tout en bas et cliquez sur <strong>“Add to website”</strong>.</li>
+          <li>Repérez votre ville, cliquez sur l’icône <strong>“&lt;/&gt;”</strong>.</li>
+          <li>Cliquez sur <strong>“Code”</strong>. Dans le lien, repérez <code>prayer_widget/XXXX/</code>.</li>
+          <li>Le nombre <strong>XXXX</strong> est votre ID. Notez-le ci-dessous.</li>
+        </ol>
+      </div>
+      <div class="start-input-group">
+        <input type="text" id="startIdInput" placeholder="Ex: 2572">
+        <button class="start-btn" onclick="validateStart()">VALIDER</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="adhanFajr" preload="auto"></audio>
+  <audio id="adhanNormal" preload="auto"></audio>
+
+  <div class="controls-area">
+    <button class="ctrl-btn" onclick="openSettings()">⚙️</button>
+    <button class="ctrl-btn" id="btnTestFajr" onclick="toggleAudio('fajr')">F</button>
+    <button class="ctrl-btn" id="btnTestNormal" onclick="toggleAudio('normal')">🔊</button>
+  </div>
+
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <h2 style="color:var(--gold); margin-bottom:20px;">Configuration</h2>
+      <div class="form-group">
+        <label>ID SalatCalendar (Widget)</label>
+        <input id="confIdInput" type="text">
+      </div>
+      <div class="form-group">
+        <label>Nom du lieu de prière</label>
+        <input id="confName" type="text" placeholder="Ex: Institut Ihsan">
+      </div>
+      <div class="form-group">
+        <label>Son Fajr</label>
+        <select id="selFajr" onchange="checkCustomAudio('Fajr')">
+          <option value="">Silencieux</option>
+          <option value="https://pomf2.lain.la/f/789yiy18.mp3">Rabat (Maliki - Fajr)</option>
+          <option value="http://www.islamcan.com/audio/adhan/azan1.mp3">Standard</option>
+          <option value="custom">Lien MP3...</option>
+        </select>
+        <input id="custFajr" type="text" placeholder="https://..." style="display:none; margin-top:5px;">
+      </div>
+      <div class="form-group">
+        <label>Son Autres</label>
+        <select id="selNormal" onchange="checkCustomAudio('Normal')">
+          <option value="">Silencieux</option>
+          <option value="https://pomf2.lain.la/f/r0g8d5s.mp3">Rabat (Maliki)</option>
+          <option value="http://www.islamcan.com/audio/adhan/azan20.mp3">Egypte</option>
+          <option value="custom">Lien MP3...</option>
+        </select>
+        <input id="custNormal" type="text" placeholder="https://..." style="display:none; margin-top:5px;">
+      </div>
+      <div class="form-group">
+        <label>Fond d'écran (URL)</label>
+        <input id="confBg" type="text" placeholder="https://...">
+      </div>
+      <button class="btn" style="background:#555; font-size:12px;" onclick="toggleConsole()">Console Debug</button>
+      <div id="debugConsole"></div>
+      <button class="btn" onclick="saveSettings()">ENREGISTRER</button>
+      <button class="btn" style="background:#333; color:#fff" onclick="closeSettings()">FERMER</button>
+    </div>
+  </div>
+
+  <div class="top-section">
+    <div class="mosque-info">
+      <h1 id="displayTitle">Institut Ihsan</h1>
+      <div class="source-badge">
+        <span id="syncStatus" class="status-light"></span>
+        <span id="displaySource">ID : --</span>
+        <span id="loadingMsg">Chargement...</span>
+      </div>
+    </div>
+    <div class="clock-container">
+      <div class="main-time" id="digitalClock">--:--</div>
+      <div class="date-group">
+        <span class="date-gregorian" id="dateGreg">--/--/----</span>
+        <span class="date-hijri" id="dateHijri"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout-wrapper">
+    
+    <div class="news-container">
+      <div class="news-label">
+        <img src="https://www.institut-ihsan.org/wp-content/uploads/2023/05/Logo-institut-ihsan-400x400.png" alt="Ihsan">
+        INFOS IHSAN
+      </div>
+      <div class="news-scroll-area">
+        <div class="news-content" id="newsTickerContent">
+          Bienvenue à l'Institut Ihsan • Chargement des actualités en cours...
+        </div>
+      </div>
+    </div>
+
+    <div class="prayers-grid">
+      <div class="prayer-card" id="card-fajr"><div class="prayer-name">Fajr</div><div class="prayer-time" id="time-fajr">--:--</div></div>
+      <div class="prayer-card" id="card-dohr"><div class="prayer-name">Dohr</div><div class="prayer-time" id="time-dohr">--:--</div></div>
+      <div class="prayer-card" id="card-asr"><div class="prayer-name">Asr</div><div class="prayer-time" id="time-asr">--:--</div></div>
+      <div class="prayer-card" id="card-maghrib"><div class="prayer-name">Maghrib</div><div class="prayer-time" id="time-maghrib">--:--</div></div>
+      <div class="prayer-card" id="card-isha"><div class="prayer-name">Isha</div><div class="prayer-time" id="time-isha">--:--</div></div>
+    </div>
+
+    <div class="countdown-container">
+      <div id="countdown" class="countdown-line">CHARGEMENT...</div>
+    </div>
+
+  </div>
+
+  <a href="https://www.institut-ihsan.org/" target="_blank" class="ihsan-logo">
+    <img src="https://www.institut-ihsan.org/wp-content/uploads/2023/05/Logo-institut-ihsan-400x400.png" alt="Ihsan">
+  </a>
+
+  <a href="https://www.salatcalendar.com/index.php" target="_blank" class="powered-by">
+    <span class="powered-text">Powered by</span>
+    <img class="powered-logo" src="https://i.ibb.co/tMZQCCcM/Capture-d-cran-2025-12-30-210457-removebg-preview.png" alt="SalatCalendar">
+  </a>
+
+<script>
+  function debug(msg) {
+    const d = new Date();
+    const l = `[${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}] ${msg}<br>`;
+    const c = document.getElementById('debugConsole');
+    c.innerHTML += l; c.scrollTop = c.scrollHeight;
+    console.log(msg);
+  }
+
+  const DEFAULT_BG = "https://www.barcelo.com/guia-turismo/wp-content/uploads/2022/10/mezquita-hassan-ii.jpg";
+  // Lien News corrigé avec votre ID
+  const NEWS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6B1oA_44aMOv20OKU4OD608yJt6o9uYH-9kobQ6iodhbPpcuNASvfkesDK5OqK4phDll7d8KgIKmr/pub?gid=0&single=true&output=csv";
+  
+  // Config Initiale - Adhan Maliki par Défaut
+  let config = { 
+    manualName: "", id: "", bgUrl: DEFAULT_BG,
+    urlFajr: "https://pomf2.lain.la/f/789yiy18.mp3", 
+    urlNormal: "https://pomf2.lain.la/f/r0g8d5s.mp3" 
+  };
+
+  let currentTimes = {};
+  let lastAdhanPlayed = "";
+  let nextPrayerTimeObj = null;
+
+  // --- START LOGIC ---
+  const saved = localStorage.getItem('mawaqitV24');
+  if(saved) {
+    const p = JSON.parse(saved);
+    if(p.id) document.getElementById('startIdInput').value = p.id;
+  }
+
+  function validateStart() {
+    const inputVal = document.getElementById('startIdInput').value.trim();
+    if(!inputVal) { alert("Veuillez entrer un ID valide."); return; }
+
+    let savedConf = saved ? JSON.parse(saved) : {};
+    
+    config.id = inputVal;
+    if(savedConf.urlFajr) config.urlFajr = savedConf.urlFajr;
+    if(savedConf.urlNormal) config.urlNormal = savedConf.urlNormal;
+    if(savedConf.manualName) config.manualName = savedConf.manualName;
+    if(savedConf.bgUrl) config.bgUrl = savedConf.bgUrl;
+
+    localStorage.setItem('mawaqitV24', JSON.stringify(config));
+    
+    const s = document.getElementById('startScreen');
+    s.style.opacity = '0'; setTimeout(() => s.style.display='none', 500);
+    
+    document.getElementById('adhanFajr').load();
+    document.getElementById('adhanNormal').load();
+    
+    initApp();
+  }
+
+  function initApp() {
+    debug("Démarrage App...");
+    applyConfig();
+    updateDate();
+    fetchTimes(); 
+    fetchNews(); 
+    setInterval(updateClock, 1000);
+    setInterval(fetchTimes, 600000); 
+    setInterval(fetchNews, 300000); 
+  }
+
+  function applyConfig() {
+    document.body.style.backgroundImage = `url('${config.bgUrl || DEFAULT_BG}')`;
+    document.getElementById('adhanFajr').src = config.urlFajr;
+    document.getElementById('adhanNormal').src = config.urlNormal;
+    document.getElementById('confName').value = config.manualName;
+    document.getElementById('confIdInput').value = config.id;
+    document.getElementById('confBg').value = config.bgUrl;
+    setSelect('selFajr', 'custFajr', config.urlFajr);
+    setSelect('selNormal', 'custNormal', config.urlNormal);
+    
+    document.getElementById('displayTitle').textContent = config.manualName || "Institut Ihsan";
+    document.getElementById('displaySource').textContent = `ID : ${config.id}`;
+  }
+
+  function saveSettings() {
+    const getVal = (s, c) => {
+        const v = document.getElementById(s).value;
+        return v === 'custom' ? document.getElementById(c).value : v;
+    };
+    config.manualName = document.getElementById('confName').value;
+    
+    let r = document.getElementById('confIdInput').value.trim();
+    const m = r.match(/\/prayer_widget\/(\d+)\//);
+    if(m) r = m[1];
+    config.id = r;
+
+    config.bgUrl = document.getElementById('confBg').value;
+    config.urlFajr = getVal('selFajr', 'custFajr');
+    config.urlNormal = getVal('selNormal', 'custNormal');
+
+    localStorage.setItem('mawaqitV24', JSON.stringify(config));
+    applyConfig();
+    fetchTimes();
+    closeSettings();
+  }
+
+  // --- GOOGLE SHEETS NEWS FETCH - ROBUSTE ---
+  // Utilise plusieurs proxies pour garantir le chargement
+  const PROXIES_NEWS = [
+    (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`, 
+    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+    (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
+  ];
+
+  async function fetchNews() {
+    debug("Fetch News...");
+    const targetUrl = NEWS_CSV_URL + "&t=" + Date.now(); // Cache bust
+
+    for (let proxyGen of PROXIES_NEWS) {
+        const proxyUrl = proxyGen(targetUrl);
+        try {
+            const res = await fetch(proxyUrl);
+            if(!res.ok) throw new Error("Status " + res.status);
+            
+            let csvText = "";
+            if(proxyUrl.includes("allorigins")) {
+                const json = await res.json();
+                csvText = json.contents;
+            } else {
+                csvText = await res.text();
+            }
+
+            if(csvText && csvText.length > 0) {
+                // Parsing CSV Robuste Ligne par Ligne
+                const lines = csvText.split(/\r?\n/);
+                const newsItems = [];
+                
+                lines.forEach(line => {
+                    if(!line.trim()) return;
+                    let cleanLine = line;
+                    // Retirer les guillemets de début/fin typiques du CSV
+                    if(cleanLine.startsWith('"') && cleanLine.endsWith('"')) {
+                        cleanLine = cleanLine.substring(1, cleanLine.length - 1);
+                    }
+                    // Remplacer les doubles guillemets par un simple
+                    cleanLine = cleanLine.replace(/""/g, '"');
+                    
+                    if(cleanLine.trim()) newsItems.push(cleanLine.trim());
+                });
+
+                if(newsItems.length > 0) {
+                    const finalText = newsItems.join(' • ');
+                    document.getElementById('newsTickerContent').innerText = finalText;
+                    debug("News OK via " + (proxyUrl.includes("corsproxy")?"CorsProxy": (proxyUrl.includes("codetabs")?"CodeTabs":"AllOrigins")));
+                    return; // Succès, on sort de la boucle
+                }
+            }
+        } catch(e) {
+            debug("Err News proxy: " + e.message);
+        }
+    }
+    document.getElementById('newsTickerContent').innerText = "Bienvenue à l'Institut Ihsan • (Erreur chargement news)";
+  }
+
+  // --- FETCHING TIMES ---
+  const PROXIES_TIMES = [
+    (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&t=${Date.now()}`,
+    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+    (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`
+  ];
+
+  async function fetchTimes() {
+    debug(`Fetch ID ${config.id}...`);
+    const statusLight = document.getElementById('syncStatus');
+    const loadMsg = document.getElementById('loadingMsg');
+    
+    statusLight.className = "status-light loading";
+    loadMsg.style.display = "inline";
+    loadMsg.textContent = "Chargement...";
+
+    const targetUrl = `https://www.salatcalendar.com/index.php/EmbededPrayer/prayer_widget/${config.id}/en/2/light`;
+    
+    for (let i = 0; i < PROXIES_TIMES.length; i++) {
+        const proxyGen = PROXIES_TIMES[i];
+        const url = proxyGen(targetUrl);
+        
+        try {
+            const res = await fetch(url);
+            if(!res.ok) throw new Error("Status " + res.status);
+            
+            let rawText = "";
+            if(url.includes("allorigins")) {
+                const json = await res.json();
+                rawText = json.contents;
+            } else {
+                rawText = await res.text();
+            }
+
+            if(!rawText) throw new Error("Empty");
+
+            const matches = rawText.match(/(\d{1,2}:\d{2})/g);
+            
+            if(matches && matches.length >= 6) {
+                const times = matches.slice(0, 6);
+                currentTimes = { 
+                    fajr: times[0], 
+                    dohr: times[2], 
+                    asr: times[3], 
+                    maghrib: times[4], 
+                    isha: times[5] 
+                };
+                renderTimes();
+                recalcNextPrayer();
+                
+                statusLight.className = "status-light ok";
+                loadMsg.style.display = "none";
+                debug("Succès Proxy #" + (i+1));
+                return;
+            }
+        } catch (e) {
+            debug(`Echec Proxy #${i+1}: ${e.message}`);
+        }
+    }
+    
+    statusLight.className = "status-light error";
+    loadMsg.style.display = "inline";
+    loadMsg.textContent = "Erreur de connexion";
+    debug("Tous proxies HS");
+  }
+
+  function renderTimes() {
+    ['fajr','dohr','asr','maghrib','isha'].forEach(k => {
+      const el = document.getElementById(`time-${k}`);
+      if(el) el.textContent = currentTimes[k];
+    });
+  }
+
+  function toggleAudio(t) {
+    const id = t==='fajr'?'adhanFajr':'adhanNormal';
+    const btn = document.getElementById(t==='fajr'?'btnTestFajr':'btnTestNormal');
+    const p = document.getElementById(id);
+    
+    if(!p.paused) {
+        p.pause(); p.currentTime=0;
+        btn.classList.remove('playing');
+    } else {
+        document.querySelectorAll('audio').forEach(a=>{a.pause();a.currentTime=0;});
+        document.querySelectorAll('.ctrl-btn').forEach(b=>b.classList.remove('playing'));
+        p.play().catch(e=>debug("Err audio"));
+        btn.classList.add('playing');
+        p.onended = () => btn.classList.remove('playing');
+    }
+  }
+
+  function recalcNextPrayer() {
+    if(!currentTimes.fajr) return;
+    const now = new Date();
+    const ids = ['fajr','dohr','asr','maghrib','isha'];
+    nextPrayerTimeObj = null;
+    for(let id of ids) {
+      const [h, m] = currentTimes[id].split(':').map(Number);
+      const pDate = new Date(); pDate.setHours(h, m, 0, 0);
+      if(pDate > now) { nextPrayerTimeObj = pDate; break; }
+    }
+    if(!nextPrayerTimeObj) {
+      const [h, m] = currentTimes['fajr'].split(':').map(Number);
+      const pDate = new Date(); pDate.setDate(pDate.getDate() + 1);
+      pDate.setHours(h, m, 0, 0);
+      nextPrayerTimeObj = pDate;
+    }
+  }
+
+  function updateDate() {
+    const now = new Date();
+    document.getElementById('dateGreg').innerText = now.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+    try {
+        const hijri = new Intl.DateTimeFormat('fr-FR-u-ca-islamic-umalqura', {day: 'numeric', month: 'long', year: 'numeric'}).format(now);
+        document.getElementById('dateHijri').innerText = hijri;
+    } catch(e) {
+        document.getElementById('dateHijri').innerText = "";
+    }
+  }
+
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('digitalClock').innerText = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+    if(now.getSeconds() === 0) updateDate();
+
+    const cdEl = document.getElementById('countdown');
+    if(nextPrayerTimeObj) {
+        const diff = nextPrayerTimeObj - now;
+        if(diff > 0) {
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            const ss = s.toString().padStart(2, '0');
+            const mm = m.toString().padStart(2, '0');
+            cdEl.innerHTML = `PROCHAINE PRIÈRE DANS &nbsp;<span>${h}:${mm}:${ss}</span>`;
+        } else {
+            cdEl.textContent = "C'EST L'HEURE";
+            recalcNextPrayer();
+        }
+    } else {
+        cdEl.textContent = "--:--:--";
+    }
+    
+    const curMins = now.getHours() * 60 + now.getMinutes();
+    const ids = ['fajr','dohr','asr','maghrib','isha'];
+    let activeId = 'fajr';
+    for(let id of ids) {
+      if(!currentTimes[id]) continue;
+      const [h, m] = currentTimes[id].split(':').map(Number);
+      if((h*60+m) > curMins) { activeId = id; break; }
+      
+      if(now.getHours()===h && now.getMinutes()===m && now.getSeconds()<2) {
+         if(lastAdhanPlayed !== id) {
+             const p = document.getElementById(id==='fajr'?'adhanFajr':'adhanNormal');
+             p.play().catch(e=>debug("Auto block"));
+             lastAdhanPlayed = id;
+         }
+      }
+    }
+    if(currentTimes['isha']) {
+        const [ih, im] = currentTimes['isha'].split(':').map(Number);
+        if(curMins >= (ih*60+im)) activeId = 'fajr';
+    }
+    
+    document.querySelectorAll('.prayer-card').forEach(c => c.classList.remove('active'));
+    document.getElementById(`card-${activeId}`).classList.add('active');
+  }
+
+  function setSelect(sId, cId, v) {
+      const s = document.getElementById(sId); const c = document.getElementById(cId);
+      let f=false; for(let i=0;i<s.options.length;i++) if(s.options[i].value===v){s.selectedIndex=i;f=true;break;}
+      if(!f&&v){s.value='custom';c.style.display='block';c.value=v;}else{c.style.display='none';}
+  }
+  function checkCustomAudio(t) {
+      const v = document.getElementById('sel'+t).value;
+      document.getElementById('cust'+t).style.display = v==='custom'?'block':'none';
+  }
+  function openSettings() { document.getElementById('settingsModal').style.display='flex'; }
+  function closeSettings() { document.getElementById('settingsModal').style.display='none'; }
+  function toggleConsole() { const c = document.getElementById('debugConsole'); c.style.display = c.style.display === 'block' ? 'none' : 'block'; }
+</script>
+</body>
+</html>
