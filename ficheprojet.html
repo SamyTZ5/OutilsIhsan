@@ -1,341 +1,794 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Générateur de Projet - Institut Ihsan</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Projet - Institut Ihsan</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
-<style>
-    /* --- VARIABLES --- */
-    :root {
-        --c-gold: #c5a065; --c-gold-light: #fdfaf2; --c-border: #e8dfc8;
-        --c-black: #1a1a1a; --c-text: #2c3e50; --c-text-muted: #7f8c8d;
-        --c-bg-body: #fcfcfc; --c-white: #ffffff;
-        --c-danger: #c0392b; --c-success: #27ae60;
-        --c-btn-excel: #217346; --c-btn-word: #2b579a;
-        --radius: 10px;
-    }
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --c-gold: #c5a065;
+            --c-gold-light: #fdfaf2;
+            --c-border: #e8dfc8;
+            --c-black: #1a1a1a;
+            --c-text: #2c3e50;
+            --c-text-muted: #7f8c8d;
+            --c-bg-body: #fcfcfc;
+            --c-white: #ffffff;
+            --c-danger: #c0392b;
+            --c-success: #27ae60;
+            --c-btn-excel: #217346;
+            --c-btn-word: #2b579a;
+            --radius: 10px;
+        }
 
-    * { box-sizing: border-box; }
-    body { font-family: 'Montserrat', sans-serif; background-color: var(--c-bg-body); color: var(--c-text); margin: 0; line-height: 1.6; }
+        * {
+            box-sizing: border-box;
+        }
 
-    /* --- HEADER --- */
-    .site-header { background-color: var(--c-black); padding: 40px 20px; text-align: center; border-bottom: 5px solid var(--c-gold); margin-bottom: 50px; }
-    .logo-link { display: inline-block; transition: transform 0.3s; cursor: pointer; }
-    .logo-link:hover { transform: scale(1.05); }
-    .logo-img { width: 110px; height: auto; margin-bottom: 20px; }
-    .site-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0; color: var(--c-white); letter-spacing: 1px; }
-    .site-subtitle { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 4px; color: var(--c-gold); margin-top: 8px; font-weight: 500; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--c-bg-body);
+            color: var(--c-text);
+            margin: 0;
+            line-height: 1.6;
+        }
 
-    /* --- LAYOUT --- */
-    .main-container { max-width: 1250px; margin: 0 auto 80px; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 40px; align-items: start; }
+        /* --- HEADER --- */
+        .site-header {
+            background-color: var(--c-black);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--c-gold);
+            margin-bottom: 50px;
+        }
 
-    /* --- CARDS --- */
-    .card { background: var(--c-white); border-radius: var(--radius); box-shadow: 0 5px 20px rgba(0,0,0,0.04); margin-bottom: 30px; border: 1px solid var(--c-border); overflow: hidden; }
-    .card-header { background-color: var(--c-gold-light); padding: 20px 30px; border-bottom: 1px solid var(--c-border); display: flex; align-items: center; justify-content: flex-start; gap: 15px; }
-    .section-number { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--c-gold); font-style: italic; font-weight: 700; background: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--c-border); flex-shrink: 0; }
-    .section-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--c-black); margin: 0; font-weight: 600; }
-    .card-body { padding: 30px; }
+        .logo-link {
+            display: inline-block;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
 
-    /* --- INPUTS --- */
-    .input-wrapper { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
-    .input-wrapper label { font-size: 0.75rem; font-weight: 700; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .input-field { width: 100%; padding: 12px 15px; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; border: 1px solid #e0e0e0; border-radius: 6px; background: #fafafa; color: var(--c-black); transition: 0.3s; }
-    .input-field:focus { border-color: var(--c-gold); background-color: #fff; outline: none; }
-    textarea.input-field { min-height: 100px; resize: vertical; }
-    select.input-field { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 15px center; background-size: 15px; padding-right: 40px; }
+        .logo-link:hover {
+            transform: scale(1.05);
+        }
 
-    /* --- TIMELINE EDITOR --- */
-    .day-container { border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 25px; background: #fff; position: relative; }
-    .day-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--c-gold-light); padding-bottom: 10px; margin-bottom: 20px; flex-wrap: wrap; gap:10px; }
-    .day-title { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--c-black); font-size: 1.1rem; }
-    
-    .time-selector-wrapper { display: flex; align-items: center; gap: 10px; background: #fcfcfc; padding: 8px 15px; border-radius: 6px; border: 1px solid #eee; }
-    .time-label { font-size: 0.75rem; font-weight: 700; color: #999; margin-right: 5px; }
-    .ts-select { border: 1px solid #ddd; border-radius: 4px; padding: 2px; font-family: inherit; font-weight: 600; color: var(--c-text); cursor: pointer; }
-    .day-duration-info { font-size: 0.75rem; font-weight: 600; color: var(--c-gold); margin-left: auto; }
+        .logo-img {
+            width: 110px;
+            height: auto;
+            margin-bottom: 20px;
+        }
 
-    .timeline-actions { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
-    .btn-timeline-add { background: #fff; border: 1px dashed var(--c-gold); color: var(--c-gold); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition:0.2s; }
-    .btn-timeline-add:hover { background: var(--c-gold-light); }
-    .btn-reset-day { background: #fff0f0; border: 1px solid #ffcccc; color: var(--c-danger); font-size: 0.7rem; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-left: 10px; }
+        .site-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin: 0;
+            color: var(--c-white);
+            letter-spacing: 1px;
+        }
 
-    /* FRISE VISUELLE */
-    .timeline-track-wrapper { position: relative; height: 110px; margin-top: 50px; margin-bottom: 20px; user-select: none; border-left: 1px dashed #eee; border-right: 1px dashed #eee; }
-    .timeline-track { position: absolute; top: 40px; left: 0; right: 0; height: 8px; background: #e0e0e0; border-radius: 4px; z-index: 1; }
-    
-    .handle-fixed {
-        position: absolute; top: 28px; width: 30px; height: 30px; 
-        background: var(--c-black); border-radius: 50%; color: #fff; border: 2px solid #fff;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.8rem; font-weight: 700; z-index: 100;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    }
-    .handle-fixed-label {
-        position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
-        font-size: 0.8rem; font-weight: 700; color: var(--c-black); white-space: nowrap;
-        background: #fff; padding: 2px 5px; border-radius: 4px; border:1px solid #eee;
-    }
+        .site-subtitle {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--c-gold);
+            margin-top: 8px;
+            font-weight: 500;
+        }
 
-    .timeline-block { 
-        position: absolute; top: 34px; height: 20px; 
-        background: rgba(255,255,255,0.95); border-radius: 4px; 
-        cursor: grab; z-index: 10; 
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        border: 2px solid #ccc;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .timeline-block:active { cursor: grabbing; border-color: var(--c-black); z-index: 50; }
-    .block-prayer { background: #d0f0e8; border-color: var(--c-success); }
-    .block-meal { background: #fadbd8; border-color: var(--c-danger); }
-    .block-custom { background: #fef5d0; border-color: var(--c-gold); }
+        /* --- LAYOUT --- */
+        .main-container {
+            max-width: 1250px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
 
-    .block-inner-text {
-        position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
-        font-size: 0.7rem; color: #000; text-align: center; 
-        white-space: nowrap; background: rgba(255,255,255,0.9); padding: 3px 6px; border-radius: 3px;
-        line-height: 1.2; border: 1px solid #eee; z-index: 60;
-    }
-    .block-inner-text strong { display: block; font-weight: 800; font-size: 0.75rem; }
+        /* --- CARDS --- */
+        .card {
+            background: var(--c-white);
+            border-radius: var(--radius);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+            margin-bottom: 30px;
+            border: 1px solid var(--c-border);
+            overflow: hidden;
+        }
 
-    .session-label { 
-        position: absolute; top: 10px; height: 20px; 
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.7rem; font-weight: 700; color: var(--c-text); 
-        background: transparent; white-space: nowrap; pointer-events: none;
-        border-bottom: 2px dotted #ccc;
-    }
+        .card-header {
+            background-color: var(--c-gold-light);
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--c-border);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
+        }
 
-    /* --- SIDEBAR --- */
-    .sidebar { position: sticky; top: 30px; }
-    .summary-card { background: var(--c-black); color: #fff; border:none; }
-    .summary-header { padding: 25px; background: #111; text-align: center; border-bottom: 1px solid #333; }
-    .summary-title { font-family: 'Playfair Display', serif; color: var(--c-gold); font-size: 1.4rem; margin: 0; text-transform: uppercase; }
-    .summary-body { padding: 25px; }
-    .kpi-row { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #333; font-size: 0.85rem; color: #ccc; }
-    .kpi-row span:last-child { text-align: right; color: #fff; font-weight: 600; max-width: 50%; }
-    .kpi-section-title { color: var(--c-gold); font-size: 0.75rem; text-transform: uppercase; margin-top: 15px; margin-bottom: 10px; font-weight: 700; letter-spacing: 1px; border-bottom: none; }
-    .final-box { background: var(--c-white); color: var(--c-black); padding: 15px; border-radius: 8px; text-align: center; margin-top: 20px; }
-    .final-amount { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; display: block; line-height: 1.1; }
-    .btn-action { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; margin-top: 10px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-excel { background-color: var(--c-btn-excel); color: white; }
-    .btn-word { background-color: var(--c-btn-word); color: white; }
+        .section-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--c-gold);
+            font-style: italic;
+            font-weight: 700;
+            background: #fff;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--c-border);
+            flex-shrink: 0;
+        }
 
-    .budget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-    .budget-col h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--c-black);
+            margin: 0;
+            font-weight: 600;
+        }
 
-    @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } .budget-grid { grid-template-columns: 1fr; } }
-</style>
+        .card-body {
+            padding: 30px;
+        }
+
+        /* --- INPUTS --- */
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .input-wrapper label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--c-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafafa;
+            color: var(--c-black);
+            transition: 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: var(--c-gold);
+            background-color: #fff;
+            outline: none;
+        }
+
+        textarea.input-field {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        select.input-field {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            padding-right: 40px;
+        }
+
+        /* --- TIMELINE EDITOR --- */
+        .day-container {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #fff;
+            position: relative;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--c-gold-light);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .day-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--c-black);
+            font-size: 1.1rem;
+        }
+
+        .time-selector-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fcfcfc;
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #999;
+            margin-right: 5px;
+        }
+
+        .ts-select {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 2px;
+            font-family: inherit;
+            font-weight: 600;
+            color: var(--c-text);
+            cursor: pointer;
+        }
+
+        .day-duration-info {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--c-gold);
+            margin-left: auto;
+        }
+
+        .timeline-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-timeline-add {
+            background: #fff;
+            border: 1px dashed var(--c-gold);
+            color: var(--c-gold);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-timeline-add:hover {
+            background: var(--c-gold-light);
+        }
+
+        .btn-reset-day {
+            background: #fff0f0;
+            border: 1px solid #ffcccc;
+            color: var(--c-danger);
+            font-size: 0.7rem;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* FRISE VISUELLE */
+        .timeline-track-wrapper {
+            position: relative;
+            height: 110px;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            user-select: none;
+            border-left: 1px dashed #eee;
+            border-right: 1px dashed #eee;
+        }
+
+        .timeline-track {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .handle-fixed {
+            position: absolute;
+            top: 28px;
+            width: 30px;
+            height: 30px;
+            background: var(--c-black);
+            border-radius: 50%;
+            color: #fff;
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 100;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .handle-fixed-label {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--c-black);
+            white-space: nowrap;
+            background: #fff;
+            padding: 2px 5px;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        .timeline-block {
+            position: absolute;
+            top: 34px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 4px;
+            cursor: grab;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-block:active {
+            cursor: grabbing;
+            border-color: var(--c-black);
+            z-index: 50;
+        }
+
+        .block-prayer {
+            background: #d0f0e8;
+            border-color: var(--c-success);
+        }
+
+        .block-meal {
+            background: #fadbd8;
+            border-color: var(--c-danger);
+        }
+
+        .block-custom {
+            background: #fef5d0;
+            border-color: var(--c-gold);
+        }
+
+        .block-inner-text {
+            position: absolute;
+            top: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: #000;
+            text-align: center;
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3px 6px;
+            border-radius: 3px;
+            line-height: 1.2;
+            border: 1px solid #eee;
+            z-index: 60;
+        }
+
+        .block-inner-text strong {
+            display: block;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+
+        .session-label {
+            position: absolute;
+            top: 10px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--c-text);
+            background: transparent;
+            white-space: nowrap;
+            pointer-events: none;
+            border-bottom: 2px dotted #ccc;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            position: sticky;
+            top: 30px;
+        }
+
+        .summary-card {
+            background: var(--c-black);
+            color: #fff;
+            border: none;
+        }
+
+        .summary-header {
+            padding: 25px;
+            background: #111;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .summary-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--c-gold);
+            font-size: 1.4rem;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .summary-body {
+            padding: 25px;
+        }
+
+        .kpi-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+
+        .kpi-row span:last-child {
+            text-align: right;
+            color: #fff;
+            font-weight: 600;
+            max-width: 50%;
+        }
+
+        .kpi-section-title {
+            color: var(--c-gold);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border-bottom: none;
+        }
+
+        .final-box {
+            background: var(--c-white);
+            color: var(--c-black);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .final-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1.1;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-excel {
+            background-color: var(--c-btn-excel);
+            color: white;
+        }
+
+        .btn-word {
+            background-color: var(--c-btn-word);
+            color: white;
+        }
+
+        .budget-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .budget-col h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .budget-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<header class="site-header">
-    <div class="header-content">
-        <a href="https://www.institut-ihsan.org/" target="_blank" class="logo-link">
-            <img src="https://www.institut-ihsan.org/wp-content/uploads/2023/05/Logo-institut-ihsan-400x400.png" alt="Logo" class="logo-img">
-        </a>
-        <h1 class="site-title">FICHE PROJET SÉMINAIRE</h1>
-        <div class="site-subtitle">Institut Ihsan</div>
-    </div>
-</header>
-
-<div class="main-container">
-    <div class="content-area">
-
-        <div class="card">
-            <div class="card-header"><span class="section-number">1</span><h2 class="section-title">Identité du Projet</h2></div>
-            <div class="card-body">
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                    <div class="input-wrapper">
-                        <label>Nom du Séminaire</label>
-                        <input type="text" id="projectTitle" class="input-field" placeholder="Titre..." oninput="updateSummary()">
-                    </div>
-                    <div class="input-wrapper">
-                        <label>Porteur de projet</label>
-                        <input type="text" id="projectManager" class="input-field" placeholder="Responsable..." oninput="updateSummary()">
-                    </div>
-                </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                    <div class="input-wrapper">
-                        <label>Intervenant(s)</label>
-                        <input type="text" id="projectSpeakers" class="input-field" placeholder="Noms des intervenants...">
-                    </div>
-                    <div class="input-wrapper">
-                        <label>Lieu / Salle</label>
-                        <select id="projectLocation" class="input-field">
-                            <option value="">-- Choisir --</option>
-                            <option value="Salle Ibn Juzay">Salle Ibn Juzay</option>
-                            <option value="Salle Ummuna Aicha">Salle Ummuna Aicha</option>
-                            <option value="Salle ibn 'Âshir">Salle ibn 'Âshir</option>
-                            <option value="Salle Alhambra">Salle Alhambra</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                    <div class="input-wrapper"><label>Date prévue</label><input type="date" id="projectDate" class="input-field" onchange="updateSummary()"></div>
-                    <div class="input-wrapper">
-                        <label>Durée (Jours)</label>
-                        <input type="number" id="numDays" class="input-field" value="1" min="1" max="7" onchange="generateTimelines(); updateSummary()">
-                    </div>
-                </div>
-            </div>
+    <header class="site-header">
+        <div class="header-content">
+            <a href="https://www.institut-ihsan.org/" target="_blank" class="logo-link">
+                <img src="https://www.institut-ihsan.org/wp-content/uploads/2023/05/Logo-institut-ihsan-400x400.png"
+                    alt="Logo" class="logo-img">
+            </a>
+            <h1 class="site-title">FICHE PROJET SÉMINAIRE</h1>
+            <div class="site-subtitle">Institut Ihsan</div>
         </div>
+    </header>
 
-        <div class="card">
-            <div class="card-header"><span class="section-number">2</span><h2 class="section-title">Le Fond (Pédagogie)</h2></div>
-            <div class="card-body">
-                <div class="input-wrapper">
-                    <label>Syllabus</label>
-                    <textarea id="projectSyllabus" class="input-field" placeholder="Précisez les objectifs du séminaire, les attendus, le format, le déroulé global..."></textarea>
+    <div class="main-container">
+        <div class="content-area">
+
+            <div class="card">
+                <div class="card-header"><span class="section-number">1</span>
+                    <h2 class="section-title">Identité du Projet</h2>
                 </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                    <div class="input-wrapper">
-                        <label>Objectifs Pédagogiques</label>
-                        <textarea id="projectObjectives" class="input-field" style="min-height:80px;" placeholder="Points clés à retenir..."></textarea>
-                    </div>
-                    <div class="input-wrapper">
-                        <label>Supports & Matériel</label>
-                        <textarea id="projectSupports" class="input-field" style="min-height:80px;" placeholder="Livret, Diaporama, Sonorisation..."></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header"><span class="section-number">3</span><h2 class="section-title">Déroulé & Rythme</h2></div>
-            <div class="card-body">
-                <div id="timelinesContainer"></div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header"><span class="section-number">4</span><h2 class="section-title">Budget Prévisionnel</h2></div>
-            <div class="card-body">
-                <div class="budget-grid">
-                    <div class="budget-col">
-                        <h3 style="color:var(--c-danger)">Dépenses</h3>
-                        <div class="input-wrapper"><label>Location / Logistique</label><input type="number" class="input-field calc-cost" id="costVenue" placeholder="0" oninput="calcBudget()"></div>
-                        <div class="input-wrapper"><label>Défraiements / Honoraires</label><input type="number" class="input-field calc-cost" id="costSpeakers" placeholder="0" oninput="calcBudget()"></div>
-                        <div class="input-wrapper"><label>Restauration</label><input type="number" class="input-field calc-cost" id="costFood" placeholder="0" oninput="calcBudget()"></div>
-                        <div class="input-wrapper"><label>Communication</label><input type="number" class="input-field calc-cost" id="costCom" placeholder="0" oninput="calcBudget()"></div>
-                    </div>
-                    <div class="budget-col">
-                        <h3 style="color:var(--c-success)">Recettes</h3>
-                        <div style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #eee; margin-bottom:15px;">
-                            <div class="input-wrapper"><label>Prix du Billet (€)</label><input type="number" class="input-field" id="ticketPrice" placeholder="0" oninput="calcBudget()"></div>
-                            <div class="input-wrapper"><label>Nombre Participants</label><input type="number" class="input-field" id="attendees" placeholder="0" oninput="calcBudget()"></div>
-                            <div style="text-align:right; font-size:0.9rem; color:var(--c-text-muted); margin-top:5px;">Billetterie : <strong id="totalTickets">0 €</strong></div>
+                <div class="card-body">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                        <div class="input-wrapper">
+                            <label>Nom du Séminaire</label>
+                            <input type="text" id="projectTitle" class="input-field" placeholder="Titre..."
+                                oninput="updateSummary()">
                         </div>
-                        <div class="input-wrapper"><label>Subventions / Dons</label><input type="number" class="input-field calc-rev" id="revGrants" placeholder="0" oninput="calcBudget()"></div>
+                        <div class="input-wrapper">
+                            <label>Porteur de projet</label>
+                            <input type="text" id="projectManager" class="input-field" placeholder="Responsable..."
+                                oninput="updateSummary()">
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                        <div class="input-wrapper">
+                            <label>Intervenant(s)</label>
+                            <input type="text" id="projectSpeakers" class="input-field"
+                                placeholder="Noms des intervenants...">
+                        </div>
+                        <div class="input-wrapper">
+                            <label>Lieu / Salle</label>
+                            <select id="projectLocation" class="input-field">
+                                <option value="">-- Choisir --</option>
+                                <option value="Salle Ibn Juzay">Salle Ibn Juzay</option>
+                                <option value="Salle Ummuna Aicha">Salle Ummuna Aicha</option>
+                                <option value="Salle ibn 'Âshir">Salle ibn 'Âshir</option>
+                                <option value="Salle Alhambra">Salle Alhambra</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                        <div class="input-wrapper"><label>Date prévue</label><input type="date" id="projectDate"
+                                class="input-field" onchange="updateSummary()"></div>
+                        <div class="input-wrapper">
+                            <label>Durée (Jours)</label>
+                            <input type="number" id="numDays" class="input-field" value="1" min="1" max="7"
+                                onchange="generateTimelines(); updateSummary()">
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-header"><span class="section-number">2</span>
+                    <h2 class="section-title">Le Fond (Pédagogie)</h2>
+                </div>
+                <div class="card-body">
+                    <div class="input-wrapper">
+                        <label>Syllabus</label>
+                        <textarea id="projectSyllabus" class="input-field"
+                            placeholder="Précisez les objectifs du séminaire, les attendus, le format, le déroulé global..."></textarea>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                        <div class="input-wrapper">
+                            <label>Objectifs Pédagogiques</label>
+                            <textarea id="projectObjectives" class="input-field" style="min-height:80px;"
+                                placeholder="Points clés à retenir..."></textarea>
+                        </div>
+                        <div class="input-wrapper">
+                            <label>Supports & Matériel</label>
+                            <textarea id="projectSupports" class="input-field" style="min-height:80px;"
+                                placeholder="Livret, Diaporama, Sonorisation..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="section-number">3</span>
+                    <h2 class="section-title">Déroulé & Rythme</h2>
+                </div>
+                <div class="card-body">
+                    <div id="timelinesContainer"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="section-number">4</span>
+                    <h2 class="section-title">Budget Prévisionnel</h2>
+                </div>
+                <div class="card-body">
+                    <div class="budget-grid">
+                        <div class="budget-col">
+                            <h3 style="color:var(--c-danger)">Dépenses</h3>
+                            <div class="input-wrapper"><label>Location / Logistique</label><input type="number"
+                                    class="input-field calc-cost" id="costVenue" placeholder="0" oninput="calcBudget()">
+                            </div>
+                            <div class="input-wrapper"><label>Défraiements / Honoraires</label><input type="number"
+                                    class="input-field calc-cost" id="costSpeakers" placeholder="0"
+                                    oninput="calcBudget()"></div>
+                            <div class="input-wrapper"><label>Restauration</label><input type="number"
+                                    class="input-field calc-cost" id="costFood" placeholder="0" oninput="calcBudget()">
+                            </div>
+                            <div class="input-wrapper"><label>Communication</label><input type="number"
+                                    class="input-field calc-cost" id="costCom" placeholder="0" oninput="calcBudget()">
+                            </div>
+                        </div>
+                        <div class="budget-col">
+                            <h3 style="color:var(--c-success)">Recettes</h3>
+                            <div
+                                style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #eee; margin-bottom:15px;">
+                                <div class="input-wrapper"><label>Prix du Billet (€)</label><input type="number"
+                                        class="input-field" id="ticketPrice" placeholder="0" oninput="calcBudget()">
+                                </div>
+                                <div class="input-wrapper"><label>Nombre Participants</label><input type="number"
+                                        class="input-field" id="attendees" placeholder="0" oninput="calcBudget()"></div>
+                                <div
+                                    style="text-align:right; font-size:0.9rem; color:var(--c-text-muted); margin-top:5px;">
+                                    Billetterie : <strong id="totalTickets">0 €</strong></div>
+                            </div>
+                            <div class="input-wrapper"><label>Subventions / Dons</label><input type="number"
+                                    class="input-field calc-rev" id="revGrants" placeholder="0" oninput="calcBudget()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <aside class="sidebar">
+            <div class="card summary-card">
+                <div class="summary-header">
+                    <h3 class="summary-title">Synthèse Complète</h3>
+                </div>
+                <div class="summary-body">
+                    <div class="kpi-section-title">Projet</div>
+                    <div class="kpi-row"><span>Nom</span><span id="synTitle">...</span></div>
+                    <div class="kpi-row"><span>Porteur</span><span id="synManager">...</span></div>
+                    <div class="kpi-row"><span>Dates</span><span id="synDate">...</span></div>
+                    <div class="kpi-row"><span>Durée</span><span id="synDays">1 Jour</span></div>
+                    <div class="kpi-row"><span>Enseignement</span><span id="synHours">0h00</span></div>
+
+                    <div class="kpi-section-title">Finance</div>
+                    <div class="kpi-row"><span>Dépenses</span><span class="kpi-val" id="dispExpenses"
+                            style="color:#e74c3c">0 €</span></div>
+                    <div class="kpi-row"><span>Recettes</span><span class="kpi-val" id="dispRevenue"
+                            style="color:#27ae60">0 €</span></div>
+
+                    <div class="final-box" id="resultBox">
+                        <span class="final-amount" id="dispResult">0 €</span>
+                        <span style="font-size:0.7rem; text-transform:uppercase; font-weight:700;">RÉSULTAT NET</span>
+                    </div>
+
+                    <button class="btn-action btn-excel" onclick="exportExcel()">📊 Exporter Excel</button>
+                    <button class="btn-action btn-word" onclick="exportWord()">📝 Exporter Word (.docx)</button>
+                </div>
+            </div>
+        </aside>
 
     </div>
 
-    <aside class="sidebar">
-        <div class="card summary-card">
-            <div class="summary-header"><h3 class="summary-title">Synthèse Complète</h3></div>
-            <div class="summary-body">
-                <div class="kpi-section-title">Projet</div>
-                <div class="kpi-row"><span>Nom</span><span id="synTitle">...</span></div>
-                <div class="kpi-row"><span>Porteur</span><span id="synManager">...</span></div>
-                <div class="kpi-row"><span>Dates</span><span id="synDate">...</span></div>
-                <div class="kpi-row"><span>Durée</span><span id="synDays">1 Jour</span></div>
-                <div class="kpi-row"><span>Enseignement</span><span id="synHours">0h00</span></div>
+    <script>
+        const TIMELINES_DATA = {};
 
-                <div class="kpi-section-title">Finance</div>
-                <div class="kpi-row"><span>Dépenses</span><span class="kpi-val" id="dispExpenses" style="color:#e74c3c">0 €</span></div>
-                <div class="kpi-row"><span>Recettes</span><span class="kpi-val" id="dispRevenue" style="color:#27ae60">0 €</span></div>
-                
-                <div class="final-box" id="resultBox">
-                    <span class="final-amount" id="dispResult">0 €</span>
-                    <span style="font-size:0.7rem; text-transform:uppercase; font-weight:700;">RÉSULTAT NET</span>
-                </div>
+        window.onload = function () {
+            generateTimelines();
+            updateSummary();
+        };
 
-                <button class="btn-action btn-excel" onclick="exportExcel()">📊 Exporter Excel</button>
-                <button class="btn-action btn-word" onclick="exportWord()">📝 Exporter Word (.docx)</button>
-            </div>
-        </div>
-    </aside>
-
-</div>
-
-<script>
-    const TIMELINES_DATA = {}; 
-
-    window.onload = function() {
-        generateTimelines();
-        updateSummary();
-    };
-
-    // --- UTILS ---
-    function timeToMins(h, m) { return parseInt(h) * 60 + parseInt(m); }
-    function minsToTime(mins) {
-        let h = Math.floor(mins / 60);
-        let m = Math.floor(mins % 60);
-        return `${h.toString().padStart(2,'0')}h${m.toString().padStart(2,'0')}`;
-    }
-    function formatDuration(mins) {
-        let h = Math.floor(mins / 60);
-        let m = Math.floor(mins % 60);
-        if(h>0) return `${h}h${m>0?m.toString().padStart(2,'0'):''}`;
-        return `${m}min`;
-    }
-
-    // --- TIMELINE SELECTORS ---
-    function getHourSelectHTML(currentVal, dayIndex, type) {
-        let h = Math.floor(currentVal / 60);
-        let html = `<select class="ts-select" onchange="onTimeSelectChange(${dayIndex}, '${type}', this, 'h')">`;
-        for(let i=6; i<=23; i++) { html += `<option value="${i}" ${i==h?'selected':''}>${i.toString().padStart(2,'0')}</option>`; }
-        html += `</select>h`;
-        return html;
-    }
-    function getMinSelectHTML(currentVal, dayIndex, type) {
-        let m = Math.floor(currentVal % 60);
-        let html = `<select class="ts-select" onchange="onTimeSelectChange(${dayIndex}, '${type}', this, 'm')">`;
-        [0, 15, 30, 45].forEach(v => { html += `<option value="${v}" ${v==m?'selected':''}>${v.toString().padStart(2,'0')}</option>`; });
-        html += `</select>`;
-        return html;
-    }
-
-    function onTimeSelectChange(dayIndex, type, el, part) {
-        const data = TIMELINES_DATA[dayIndex];
-        let current = data[type];
-        let h = Math.floor(current / 60);
-        let m = Math.floor(current % 60);
-        if(part === 'h') h = parseInt(el.value);
-        if(part === 'm') m = parseInt(el.value);
-        let newMins = h*60 + m;
-        if(type === 'start' && newMins >= data.end) { alert("Le début doit être avant la fin"); renderTimeline(dayIndex); return; }
-        if(type === 'end' && newMins <= data.start) { alert("La fin doit être après le début"); renderTimeline(dayIndex); return; }
-        data[type] = newMins;
-        renderTimeline(dayIndex);
-        updateSummary();
-    }
-
-    // --- TIMELINE LOGIC ---
-    function generateTimelines() {
-        const num = parseInt(document.getElementById('numDays').value) || 1;
-        const container = document.getElementById('timelinesContainer');
-        container.innerHTML = "";
-        for(let i=1; i<=num; i++) {
-            if(!TIMELINES_DATA[i]) { TIMELINES_DATA[i] = { start: 540, end: 1080, markers: [] }; }
-            createDayWidget(i);
+        // --- UTILS ---
+        function timeToMins(h, m) { return parseInt(h) * 60 + parseInt(m); }
+        function minsToTime(mins) {
+            let h = Math.floor(mins / 60);
+            let m = Math.floor(mins % 60);
+            return `${h.toString().padStart(2, '0')}h${m.toString().padStart(2, '0')}`;
         }
-        updateSummary();
-    }
+        function formatDuration(mins) {
+            let h = Math.floor(mins / 60);
+            let m = Math.floor(mins % 60);
+            if (h > 0) return `${h}h${m > 0 ? m.toString().padStart(2, '0') : ''}`;
+            return `${m}min`;
+        }
 
-    function createDayWidget(dayIndex) {
-        const data = TIMELINES_DATA[dayIndex];
-        const div = document.createElement('div');
-        div.className = 'day-container';
-        div.innerHTML = `
+        // --- TIMELINE SELECTORS ---
+        function getHourSelectHTML(currentVal, dayIndex, type) {
+            let h = Math.floor(currentVal / 60);
+            let html = `<select class="ts-select" onchange="onTimeSelectChange(${dayIndex}, '${type}', this, 'h')">`;
+            for (let i = 6; i <= 23; i++) { html += `<option value="${i}" ${i == h ? 'selected' : ''}>${i.toString().padStart(2, '0')}</option>`; }
+            html += `</select>h`;
+            return html;
+        }
+        function getMinSelectHTML(currentVal, dayIndex, type) {
+            let m = Math.floor(currentVal % 60);
+            let html = `<select class="ts-select" onchange="onTimeSelectChange(${dayIndex}, '${type}', this, 'm')">`;
+            [0, 15, 30, 45].forEach(v => { html += `<option value="${v}" ${v == m ? 'selected' : ''}>${v.toString().padStart(2, '0')}</option>`; });
+            html += `</select>`;
+            return html;
+        }
+
+        function onTimeSelectChange(dayIndex, type, el, part) {
+            const data = TIMELINES_DATA[dayIndex];
+            let current = data[type];
+            let h = Math.floor(current / 60);
+            let m = Math.floor(current % 60);
+            if (part === 'h') h = parseInt(el.value);
+            if (part === 'm') m = parseInt(el.value);
+            let newMins = h * 60 + m;
+            if (type === 'start' && newMins >= data.end) { alert("Le début doit être avant la fin"); renderTimeline(dayIndex); return; }
+            if (type === 'end' && newMins <= data.start) { alert("La fin doit être après le début"); renderTimeline(dayIndex); return; }
+            data[type] = newMins;
+            renderTimeline(dayIndex);
+            updateSummary();
+        }
+
+        // --- TIMELINE LOGIC ---
+        function generateTimelines() {
+            const num = parseInt(document.getElementById('numDays').value) || 1;
+            const container = document.getElementById('timelinesContainer');
+            container.innerHTML = "";
+            for (let i = 1; i <= num; i++) {
+                if (!TIMELINES_DATA[i]) { TIMELINES_DATA[i] = { start: 540, end: 1080, markers: [] }; }
+                createDayWidget(i);
+            }
+            updateSummary();
+        }
+
+        function createDayWidget(dayIndex) {
+            const data = TIMELINES_DATA[dayIndex];
+            const div = document.createElement('div');
+            div.className = 'day-container';
+            div.innerHTML = `
             <div class="day-header">
                 <div class="day-title">Jour ${dayIndex}</div>
                 <div class="time-selector-wrapper">
@@ -363,205 +816,215 @@
                 <button class="btn-timeline-add" style="border-style:solid; background:#f0f0f0;" onclick="addCustomMarker(${dayIndex})">+ Autre</button>
             </div>
         `;
-        document.getElementById('timelinesContainer').appendChild(div);
-        renderTimeline(dayIndex);
-    }
+            document.getElementById('timelinesContainer').appendChild(div);
+            renderTimeline(dayIndex);
+        }
 
-    function resetDay(dayIndex) {
-        if(confirm("Réinitialiser le planning de ce jour ?")) {
-            TIMELINES_DATA[dayIndex].markers = [];
+        function resetDay(dayIndex) {
+            if (confirm("Réinitialiser le planning de ce jour ?")) {
+                TIMELINES_DATA[dayIndex].markers = [];
+                renderTimeline(dayIndex);
+                updateSummary();
+            }
+        }
+
+        function addCustomMarker(dayIndex) {
+            const name = prompt("Nom de l'événement (ex: Pause Café) :");
+            if (name) addMarker(dayIndex, 'custom', name);
+        }
+
+        function addMarker(dayIndex, type, label) {
+            const data = TIMELINES_DATA[dayIndex];
+            if (type === 'prayer') { if (data.markers.find(m => m.label === label)) { alert(label + " est déjà ajouté."); return; } }
+            let def = 15; if (type === 'meal') def = 45;
+            const dur = prompt(`Durée de "${label}" en minutes ?`, def);
+            if (dur === null) return;
+            const duration = parseInt(dur) || 15;
+            const mid = data.start + (data.end - data.start) / 2;
+            data.markers.push({ id: Date.now(), type: type, label: label, startMins: mid, duration: duration });
             renderTimeline(dayIndex);
             updateSummary();
         }
-    }
 
-    function addCustomMarker(dayIndex) {
-        const name = prompt("Nom de l'événement (ex: Pause Café) :");
-        if(name) addMarker(dayIndex, 'custom', name);
-    }
+        function removeMarker(dayIndex, id) {
+            const data = TIMELINES_DATA[dayIndex];
+            data.markers = data.markers.filter(m => m.id !== id);
+            renderTimeline(dayIndex);
+            updateSummary();
+        }
 
-    function addMarker(dayIndex, type, label) {
-        const data = TIMELINES_DATA[dayIndex];
-        if(type === 'prayer') { if(data.markers.find(m => m.label === label)) { alert(label + " est déjà ajouté."); return; } }
-        let def = 15; if(type==='meal') def=45;
-        const dur = prompt(`Durée de "${label}" en minutes ?`, def);
-        if(dur === null) return;
-        const duration = parseInt(dur) || 15;
-        const mid = data.start + (data.end - data.start)/2;
-        data.markers.push({ id: Date.now(), type: type, label: label, startMins: mid, duration: duration });
-        renderTimeline(dayIndex);
-        updateSummary();
-    }
+        function renderTimeline(dayIndex) {
+            const data = TIMELINES_DATA[dayIndex];
+            const wrapper = document.getElementById(`track-${dayIndex}`);
+            const totalDuration = data.end - data.start;
+            document.getElementById(`info-${dayIndex}`).innerText = "Amplitude: " + formatDuration(totalDuration);
 
-    function removeMarker(dayIndex, id) {
-        const data = TIMELINES_DATA[dayIndex];
-        data.markers = data.markers.filter(m => m.id !== id);
-        renderTimeline(dayIndex);
-        updateSummary();
-    }
+            wrapper.querySelectorAll('.timeline-block, .session-label, .handle-fixed, .handle-fixed-label').forEach(el => el.remove());
 
-    function renderTimeline(dayIndex) {
-        const data = TIMELINES_DATA[dayIndex];
-        const wrapper = document.getElementById(`track-${dayIndex}`);
-        const totalDuration = data.end - data.start;
-        document.getElementById(`info-${dayIndex}`).innerText = "Amplitude: " + formatDuration(totalDuration);
-        
-        wrapper.querySelectorAll('.timeline-block, .session-label, .handle-fixed, .handle-fixed-label').forEach(el => el.remove());
+            if (totalDuration <= 0) return;
 
-        if(totalDuration <= 0) return;
+            // FIXED HANDLES
+            const startHandle = document.createElement('div');
+            startHandle.className = 'handle-fixed'; startHandle.style.left = '-15px'; startHandle.innerText = 'D';
+            const startLabel = document.createElement('div'); startLabel.className = 'handle-fixed-label'; startLabel.innerText = minsToTime(data.start); startHandle.appendChild(startLabel);
+            wrapper.appendChild(startHandle);
 
-        // FIXED HANDLES
-        const startHandle = document.createElement('div');
-        startHandle.className = 'handle-fixed'; startHandle.style.left = '-15px'; startHandle.innerText = 'D';
-        const startLabel = document.createElement('div'); startLabel.className='handle-fixed-label'; startLabel.innerText = minsToTime(data.start); startHandle.appendChild(startLabel);
-        wrapper.appendChild(startHandle);
+            const endHandle = document.createElement('div');
+            endHandle.className = 'handle-fixed'; endHandle.style.right = '-15px'; endHandle.innerText = 'F';
+            const endLabel = document.createElement('div'); endLabel.className = 'handle-fixed-label'; endLabel.innerText = minsToTime(data.end); endHandle.appendChild(endLabel);
+            wrapper.appendChild(endHandle);
 
-        const endHandle = document.createElement('div');
-        endHandle.className = 'handle-fixed'; endHandle.style.right = '-15px'; endHandle.innerText = 'F';
-        const endLabel = document.createElement('div'); endLabel.className='handle-fixed-label'; endLabel.innerText = minsToTime(data.end); endHandle.appendChild(endLabel);
-        wrapper.appendChild(endHandle);
+            data.markers.sort((a, b) => a.startMins - b.startMins);
 
-        data.markers.sort((a,b) => a.startMins - b.startMins);
+            data.markers.forEach(p => {
+                let leftPct = ((p.startMins - data.start) / totalDuration) * 100;
+                let widthPct = (p.duration / totalDuration) * 100;
+                let el = document.createElement('div');
+                el.className = `timeline-block ${p.type === 'prayer' ? 'block-prayer' : ''} ${p.type === 'meal' ? 'block-meal' : ''} ${p.type === 'custom' ? 'block-custom' : ''}`;
+                el.style.left = `${leftPct}%`;
+                el.style.width = `${widthPct}%`;
+                el.innerHTML = `<div class="block-inner-text"><strong>${p.label}</strong>${minsToTime(p.startMins)} - ${minsToTime(p.startMins + p.duration)}</div>`;
+                el.onmousedown = (e) => startDrag(e, dayIndex, p.id, wrapper, totalDuration);
+                el.ondblclick = () => { if (confirm("Supprimer ?")) removeMarker(dayIndex, p.id); };
+                wrapper.appendChild(el);
+            });
 
-        data.markers.forEach(p => {
-            let leftPct = ((p.startMins - data.start) / totalDuration) * 100;
-            let widthPct = (p.duration / totalDuration) * 100;
-            let el = document.createElement('div');
-            el.className = `timeline-block ${p.type === 'prayer' ? 'block-prayer' : ''} ${p.type === 'meal' ? 'block-meal' : ''} ${p.type === 'custom' ? 'block-custom' : ''}`;
-            el.style.left = `${leftPct}%`;
-            el.style.width = `${widthPct}%`;
-            el.innerHTML = `<div class="block-inner-text"><strong>${p.label}</strong>${minsToTime(p.startMins)} - ${minsToTime(p.startMins+p.duration)}</div>`;
-            el.onmousedown = (e) => startDrag(e, dayIndex, p.id, wrapper, totalDuration);
-            el.ondblclick = () => { if(confirm("Supprimer ?")) removeMarker(dayIndex, p.id); };
-            wrapper.appendChild(el);
-        });
-
-        // Gaps
-        let prevEnd = data.start;
-        data.markers.forEach(m => {
-            let gap = m.startMins - prevEnd;
-            if(gap > 15) {
-                let center = prevEnd + gap/2;
-                let pct = ((center - data.start)/totalDuration)*100;
+            // Gaps
+            let prevEnd = data.start;
+            data.markers.forEach(m => {
+                let gap = m.startMins - prevEnd;
+                if (gap > 15) {
+                    let center = prevEnd + gap / 2;
+                    let pct = ((center - data.start) / totalDuration) * 100;
+                    let lbl = document.createElement('div'); lbl.className = 'session-label';
+                    lbl.innerText = formatDuration(gap);
+                    lbl.style.left = `${pct}%`; lbl.style.transform = "translateX(-50%)";
+                    wrapper.appendChild(lbl);
+                }
+                prevEnd = m.startMins + m.duration;
+            });
+            let lastGap = data.end - prevEnd;
+            if (lastGap > 15) {
+                let center = prevEnd + lastGap / 2;
+                let pct = ((center - data.start) / totalDuration) * 100;
                 let lbl = document.createElement('div'); lbl.className = 'session-label';
-                lbl.innerText = formatDuration(gap);
+                lbl.innerText = formatDuration(lastGap);
                 lbl.style.left = `${pct}%`; lbl.style.transform = "translateX(-50%)";
                 wrapper.appendChild(lbl);
             }
-            prevEnd = m.startMins + m.duration;
-        });
-        let lastGap = data.end - prevEnd;
-        if(lastGap > 15) {
-            let center = prevEnd + lastGap/2;
-            let pct = ((center - data.start)/totalDuration)*100;
-            let lbl = document.createElement('div'); lbl.className = 'session-label';
-            lbl.innerText = formatDuration(lastGap);
-            lbl.style.left = `${pct}%`; lbl.style.transform = "translateX(-50%)";
-            wrapper.appendChild(lbl);
         }
-    }
 
-    let draggedItem = null;
-    function startDrag(e, dayIndex, markerId, wrapper, totalDuration) { e.preventDefault(); draggedItem = { dayIndex, markerId, wrapper, totalDuration }; document.addEventListener('mousemove', onDrag); document.addEventListener('mouseup', stopDrag); }
-    function onDrag(e) {
-        if(!draggedItem) return;
-        const rect = draggedItem.wrapper.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        if(x < 0) x = 0; if(x > rect.width) x = rect.width;
-        const pct = x / rect.width;
-        const data = TIMELINES_DATA[draggedItem.dayIndex];
-        const newStart = Math.round(data.start + (draggedItem.totalDuration * pct));
-        const marker = data.markers.find(m => m.id === draggedItem.markerId);
-        if(newStart >= data.start && (newStart + marker.duration) <= data.end) {
-            marker.startMins = newStart;
-            renderTimeline(draggedItem.dayIndex);
+        let draggedItem = null;
+        function startDrag(e, dayIndex, markerId, wrapper, totalDuration) { e.preventDefault(); draggedItem = { dayIndex, markerId, wrapper, totalDuration }; document.addEventListener('mousemove', onDrag); document.addEventListener('mouseup', stopDrag); }
+        function onDrag(e) {
+            if (!draggedItem) return;
+            const rect = draggedItem.wrapper.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            if (x < 0) x = 0; if (x > rect.width) x = rect.width;
+            const pct = x / rect.width;
+            const data = TIMELINES_DATA[draggedItem.dayIndex];
+            const newStart = Math.round(data.start + (draggedItem.totalDuration * pct));
+            const marker = data.markers.find(m => m.id === draggedItem.markerId);
+            if (newStart >= data.start && (newStart + marker.duration) <= data.end) {
+                marker.startMins = newStart;
+                renderTimeline(draggedItem.dayIndex);
+            }
         }
-    }
-    function stopDrag() { draggedItem = null; document.removeEventListener('mousemove', onDrag); document.removeEventListener('mouseup', stopDrag); updateSummary(); }
+        function stopDrag() { draggedItem = null; document.removeEventListener('mousemove', onDrag); document.removeEventListener('mouseup', stopDrag); updateSummary(); }
 
-    // --- SUMMARY ---
-    function updateSummary() {
-        document.getElementById('synTitle').innerText = document.getElementById('projectTitle').value || "...";
-        document.getElementById('synManager').innerText = document.getElementById('projectManager').value || "...";
-        document.getElementById('synDate').innerText = document.getElementById('projectDate').value || "...";
-        document.getElementById('synDays').innerText = document.getElementById('numDays').value + " Jour(s)";
-        
-        let totalTeaching = 0;
-        for(let i in TIMELINES_DATA) {
-            const d = TIMELINES_DATA[i];
-            let dayDur = d.end - d.start;
-            let breakDur = 0;
-            d.markers.forEach(m => breakDur += m.duration);
-            totalTeaching += (dayDur - breakDur);
+        // --- SUMMARY ---
+        function updateSummary() {
+            document.getElementById('synTitle').innerText = document.getElementById('projectTitle').value || "...";
+            document.getElementById('synManager').innerText = document.getElementById('projectManager').value || "...";
+            document.getElementById('synDate').innerText = document.getElementById('projectDate').value || "...";
+            document.getElementById('synDays').innerText = document.getElementById('numDays').value + " Jour(s)";
+
+            let totalTeaching = 0;
+            for (let i in TIMELINES_DATA) {
+                const d = TIMELINES_DATA[i];
+                let dayDur = d.end - d.start;
+                let breakDur = 0;
+                d.markers.forEach(m => breakDur += m.duration);
+                totalTeaching += (dayDur - breakDur);
+            }
+            document.getElementById('synHours').innerText = formatDuration(totalTeaching);
+            calcBudget();
         }
-        document.getElementById('synHours').innerText = formatDuration(totalTeaching);
-        calcBudget();
-    }
 
-    function calcBudget() {
-        let costs = 0; document.querySelectorAll('.calc-cost').forEach(el => costs += parseFloat(el.value) || 0);
-        const revenue = (parseFloat(document.getElementById('ticketPrice').value)||0)*(parseFloat(document.getElementById('attendees').value)||0) + (parseFloat(document.getElementById('revGrants').value)||0);
-        
-        document.getElementById('totalTickets').innerText = ((parseFloat(document.getElementById('ticketPrice').value)||0)*(parseFloat(document.getElementById('attendees').value)||0)).toFixed(2) + " €";
-        document.getElementById('dispExpenses').innerText = costs.toFixed(2) + " €";
-        document.getElementById('dispRevenue').innerText = revenue.toFixed(2) + " €";
-        const result = revenue - costs;
-        const disp = document.getElementById('dispResult');
-        const box = document.getElementById('resultBox');
-        disp.innerText = (result > 0 ? "+" : "") + result.toFixed(2) + " €";
-        if(result >= 0) { disp.style.color = "#27ae60"; box.style.border = "1px solid #27ae60"; }
-        else { disp.style.color = "#c0392b"; box.style.border = "1px solid #c0392b"; }
-    }
+        function calcBudget() {
+            let costs = 0; document.querySelectorAll('.calc-cost').forEach(el => costs += parseFloat(el.value) || 0);
+            const revenue = (parseFloat(document.getElementById('ticketPrice').value) || 0) * (parseFloat(document.getElementById('attendees').value) || 0) + (parseFloat(document.getElementById('revGrants').value) || 0);
 
-    // --- EXCEL EXPORT ---
-    function exportExcel() {
-        const wb = XLSX.utils.book_new();
-        const sHeader = { font: { bold: true, sz: 14, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "C5A065" } }, alignment: { horizontal: "center" } };
-        const sSection = { font: { bold: true, color: { rgb: "C5A065" } }, border: { bottom: { style: "thin", color: { rgb: "C5A065" } } } };
-        const sLabel = { font: { bold: true, color: { rgb: "444444" } } };
-        
-        let ws_data = [
-            [{v: "FICHE PROJET - INSTITUT IHSAN", s: sHeader}], [],
-            [{v: "1. IDENTITÉ", s: sSection}],
-            [{v: "Titre", s: sLabel}, {v: document.getElementById('projectTitle').value}],
-            [{v: "Porteur", s: sLabel}, {v: document.getElementById('projectManager').value}],
-            [{v: "Intervenants", s: sLabel}, {v: document.getElementById('projectSpeakers').value}],
-            [{v: "Lieu", s: sLabel}, {v: document.getElementById('projectLocation').value}],
-            [{v: "Date", s: sLabel}, {v: document.getElementById('projectDate').value}],
-            [{v: "Durée", s: sLabel}, {v: document.getElementById('numDays').value + " Jours"}],
-            [],
-            [{v: "2. CONTENU", s: sSection}],
-            [{v: "Syllabus", s: sLabel}, {v: document.getElementById('projectSyllabus').value}],
-            [{v: "Objectifs", s: sLabel}, {v: document.getElementById('projectObjectives').value}],
-            [{v: "Supports", s: sLabel}, {v: document.getElementById('projectSupports').value}],
-            [],
-            [{v: "3. DÉROULÉ", s: sSection}]
-        ];
-        for(let i in TIMELINES_DATA) {
-            const d = TIMELINES_DATA[i];
-            ws_data.push([{v: "JOUR " + i + " (" + minsToTime(d.start) + " - " + minsToTime(d.end) + ")", s: {font:{bold:true}}}]);
-            d.markers.sort((a,b)=>a.startMins-b.startMins).forEach(m => {
-                ws_data.push(["", minsToTime(m.startMins) + " - " + minsToTime(m.startMins+m.duration), m.label + " (" + formatDuration(m.duration) + ")"]);
-            });
+            document.getElementById('totalTickets').innerText = ((parseFloat(document.getElementById('ticketPrice').value) || 0) * (parseFloat(document.getElementById('attendees').value) || 0)).toFixed(2) + " €";
+            document.getElementById('dispExpenses').innerText = costs.toFixed(2) + " €";
+            document.getElementById('dispRevenue').innerText = revenue.toFixed(2) + " €";
+            const result = revenue - costs;
+            const disp = document.getElementById('dispResult');
+            const box = document.getElementById('resultBox');
+            disp.innerText = (result > 0 ? "+" : "") + result.toFixed(2) + " €";
+            if (result >= 0) { disp.style.color = "#27ae60"; box.style.border = "1px solid #27ae60"; }
+            else { disp.style.color = "#c0392b"; box.style.border = "1px solid #c0392b"; }
+        }
+
+        // --- EXCEL EXPORT ---
+        function exportExcel() {
+            const wb = XLSX.utils.book_new();
+            const sHeader = { font: { bold: true, sz: 14, color: { rgb: "FFFFFF" } }, fill: { fgColor: { rgb: "C5A065" } }, alignment: { horizontal: "center" } };
+            const sSection = { font: { bold: true, color: { rgb: "C5A065" } }, border: { bottom: { style: "thin", color: { rgb: "C5A065" } } } };
+            const sLabel = { font: { bold: true, color: { rgb: "444444" } } };
+
+            let ws_data = [
+                [{ v: "FICHE PROJET - INSTITUT IHSAN", s: sHeader }], [],
+                [{ v: "1. IDENTITÉ", s: sSection }],
+                [{ v: "Titre", s: sLabel }, { v: document.getElementById('projectTitle').value }],
+                [{ v: "Porteur", s: sLabel }, { v: document.getElementById('projectManager').value }],
+                [{ v: "Intervenants", s: sLabel }, { v: document.getElementById('projectSpeakers').value }],
+                [{ v: "Lieu", s: sLabel }, { v: document.getElementById('projectLocation').value }],
+                [{ v: "Date", s: sLabel }, { v: document.getElementById('projectDate').value }],
+                [{ v: "Durée", s: sLabel }, { v: document.getElementById('numDays').value + " Jours" }],
+                [],
+                [{ v: "2. CONTENU", s: sSection }],
+                [{ v: "Syllabus", s: sLabel }, { v: document.getElementById('projectSyllabus').value }],
+                [{ v: "Objectifs", s: sLabel }, { v: document.getElementById('projectObjectives').value }],
+                [{ v: "Supports", s: sLabel }, { v: document.getElementById('projectSupports').value }],
+                [],
+                [{ v: "3. DÉROULÉ", s: sSection }]
+            ];
+            for (let i in TIMELINES_DATA) {
+                const d = TIMELINES_DATA[i];
+                ws_data.push([{ v: "JOUR " + i + " (" + minsToTime(d.start) + " - " + minsToTime(d.end) + ")", s: { font: { bold: true } } }]);
+                d.markers.sort((a, b) => a.startMins - b.startMins).forEach(m => {
+                    ws_data.push(["", minsToTime(m.startMins) + " - " + minsToTime(m.startMins + m.duration), m.label + " (" + formatDuration(m.duration) + ")"]);
+                });
+                ws_data.push([]);
+            }
+            ws_data.push([{ v: "4. FINANCE", s: sSection }]);
+            ws_data.push([{ v: "DÉPENSES", s: sLabel }, { v: document.getElementById('dispExpenses').innerText }]);
+            ws_data.push(["", "Location / Logistique", (parseFloat(document.getElementById('costVenue').value) || 0).toFixed(2) + " €"]);
+            ws_data.push(["", "Défraiements / Honoraires", (parseFloat(document.getElementById('costSpeakers').value) || 0).toFixed(2) + " €"]);
+            ws_data.push(["", "Restauration", (parseFloat(document.getElementById('costFood').value) || 0).toFixed(2) + " €"]);
+            ws_data.push(["", "Communication", (parseFloat(document.getElementById('costCom').value) || 0).toFixed(2) + " €"]);
             ws_data.push([]);
+
+            ws_data.push([{ v: "RECETTES", s: sLabel }, { v: document.getElementById('dispRevenue').innerText }]);
+            ws_data.push(["", "Billetterie", document.getElementById('totalTickets').innerText]);
+            ws_data.push(["", "Subventions / Dons", (parseFloat(document.getElementById('revGrants').value) || 0).toFixed(2) + " €"]);
+            ws_data.push([]);
+
+            ws_data.push([{ v: "RÉSULTAT NET", s: { font: { bold: true, sz: 12 } } }, { v: document.getElementById('dispResult').innerText, s: { font: { bold: true, sz: 12 } } }]);
+
+            const ws = XLSX.utils.aoa_to_sheet([]);
+            ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }];
+            ws['!cols'] = [{ wch: 25 }, { wch: 25 }, { wch: 40 }];
+            XLSX.utils.sheet_add_aoa(ws, ws_data, { origin: "A1" });
+            XLSX.utils.book_append_sheet(wb, ws, "Projet Ihsan");
+            XLSX.writeFile(wb, "Projet_Ihsan.xlsx");
         }
-        ws_data.push([{v: "4. FINANCE", s: sSection}]);
-        ws_data.push([{v: "Dépenses", s: sLabel}, {v: document.getElementById('dispExpenses').innerText}]);
-        ws_data.push([{v: "Recettes", s: sLabel}, {v: document.getElementById('dispRevenue').innerText}]);
-        ws_data.push([{v: "RÉSULTAT NET", s: {font:{bold:true, sz:12}}}, {v: document.getElementById('dispResult').innerText, s: {font:{bold:true, sz:12}}}]);
 
-        const ws = XLSX.utils.aoa_to_sheet([]);
-        ws['!merges'] = [{ s: {r:0, c:0}, e: {r:0, c:2} }];
-        ws['!cols'] = [{wch:25}, {wch:25}, {wch:40}];
-        XLSX.utils.sheet_add_aoa(ws, ws_data, {origin: "A1"});
-        XLSX.utils.book_append_sheet(wb, ws, "Projet Ihsan");
-        XLSX.writeFile(wb, "Projet_Ihsan.xlsx");
-    }
-
-    // --- WORD EXPORT (.docx) ---
-    function exportWord() {
-        // Construit un document HTML complet qui sera converti
-        let content = `
+        // --- WORD EXPORT (.docx) ---
+        function exportWord() {
+            // Construit un document HTML complet qui sera converti
+            let content = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -597,59 +1060,70 @@
             <p><strong>Supports :</strong><br>${document.getElementById('projectSupports').value.replace(/\n/g, '<br>')}</p>
 
             <h2>3. Budget Prévisionnel</h2>
-            <p><strong>Total Dépenses :</strong> ${document.getElementById('dispExpenses').innerText}</p>
-            <p><strong>Total Recettes :</strong> ${document.getElementById('dispRevenue').innerText}</p>
-            <p style="font-size:14px; font-weight:bold; margin-top:10px;">RÉSULTAT NET : ${document.getElementById('dispResult').innerText}</p>
-            <p><em>(Billetterie estimée : ${document.getElementById('totalTickets').innerText})</em></p>
+            <div style="margin-bottom:15px;">
+                <p style="border-bottom:1px solid #eee; padding-bottom:5px;"><strong>DÉPENSES : ${document.getElementById('dispExpenses').innerText}</strong></p>
+                <div class="finance-row"><span>- Location / Logistique :</span> <span class="finance-val">${(parseFloat(document.getElementById('costVenue').value) || 0).toFixed(2)} €</span></div>
+                <div class="finance-row"><span>- Défraiements / Honoraires :</span> <span class="finance-val">${(parseFloat(document.getElementById('costSpeakers').value) || 0).toFixed(2)} €</span></div>
+                <div class="finance-row"><span>- Restauration :</span> <span class="finance-val">${(parseFloat(document.getElementById('costFood').value) || 0).toFixed(2)} €</span></div>
+                <div class="finance-row"><span>- Communication :</span> <span class="finance-val">${(parseFloat(document.getElementById('costCom').value) || 0).toFixed(2)} €</span></div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <p style="border-bottom:1px solid #eee; padding-bottom:5px;"><strong>RECETTES : ${document.getElementById('dispRevenue').innerText}</strong></p>
+                <div class="finance-row"><span>- Billetterie :</span> <span class="finance-val">${document.getElementById('totalTickets').innerText}</span></div>
+                <div class="finance-row"><span>- Subventions / Dons :</span> <span class="finance-val">${(parseFloat(document.getElementById('revGrants').value) || 0).toFixed(2)} €</span></div>
+            </div>
+
+            <p style="font-size:14px; font-weight:bold; margin-top:20px; border-top:2px solid #ddd; padding-top:10px;">RÉSULTAT NET : ${document.getElementById('dispResult').innerText}</p>
 
             <h2>4. Déroulé Détaillé</h2>
         `;
 
-        // Boucle sur les jours pour créer des tableaux
-        for(let i in TIMELINES_DATA) {
-            const d = TIMELINES_DATA[i];
-            content += `<h3>Jour ${i} (${minsToTime(d.start)} - ${minsToTime(d.end)})</h3>`;
-            content += `<table><thead><tr><th width="20%">Horaire</th><th width="60%">Activité</th><th width="20%">Durée</th></tr></thead><tbody>`;
-            
-            // Tri des marqueurs
-            d.markers.sort((a,b)=>a.startMins-b.startMins);
-            let cursor = d.start;
+            // Boucle sur les jours pour créer des tableaux
+            for (let i in TIMELINES_DATA) {
+                const d = TIMELINES_DATA[i];
+                content += `<h3>Jour ${i} (${minsToTime(d.start)} - ${minsToTime(d.end)})</h3>`;
+                content += `<table><thead><tr><th width="20%">Horaire</th><th width="60%">Activité</th><th width="20%">Durée</th></tr></thead><tbody>`;
 
-            d.markers.forEach(m => {
-                // Espace vide avant (Cours)
-                if(m.startMins > cursor) {
-                    content += `<tr>
+                // Tri des marqueurs
+                d.markers.sort((a, b) => a.startMins - b.startMins);
+                let cursor = d.start;
+
+                d.markers.forEach(m => {
+                    // Espace vide avant (Cours)
+                    if (m.startMins > cursor) {
+                        content += `<tr>
                         <td>${minsToTime(cursor)} - ${minsToTime(m.startMins)}</td>
                         <td>Session d'enseignement</td>
                         <td>${formatDuration(m.startMins - cursor)}</td>
                     </tr>`;
-                }
-                // L'événement (Pause/Repas)
-                let color = "#ffffff";
-                if(m.type === 'prayer') color = "#e8f8f5";
-                if(m.type === 'meal') color = "#fdedec";
-                
-                content += `<tr style="background-color:${color};">
+                    }
+                    // L'événement (Pause/Repas)
+                    let color = "#ffffff";
+                    if (m.type === 'prayer') color = "#e8f8f5";
+                    if (m.type === 'meal') color = "#fdedec";
+
+                    content += `<tr style="background-color:${color};">
                     <td>${minsToTime(m.startMins)} - ${minsToTime(m.startMins + m.duration)}</td>
                     <td><strong>${m.label}</strong></td>
                     <td>${formatDuration(m.duration)}</td>
                 </tr>`;
-                
-                cursor = m.startMins + m.duration;
-            });
 
-            // Espace vide fin de journée
-            if(cursor < d.end) {
-                content += `<tr>
+                    cursor = m.startMins + m.duration;
+                });
+
+                // Espace vide fin de journée
+                if (cursor < d.end) {
+                    content += `<tr>
                     <td>${minsToTime(cursor)} - ${minsToTime(d.end)}</td>
                     <td>Session d'enseignement</td>
                     <td>${formatDuration(d.end - cursor)}</td>
                 </tr>`;
+                }
+                content += `</tbody></table>`;
             }
-            content += `</tbody></table>`;
-        }
 
-        content += `
+            content += `
             <div style="margin-top:50px; text-align:right;">
                 <div style="border:1px solid #000; width:200px; height:80px; padding:10px; display:inline-block; text-align:left;">
                     <strong>VISA PRÉSIDENT</strong><br><br><br>Signature :
@@ -658,11 +1132,12 @@
         </body></html>
         `;
 
-        // Conversion en Blob DOCX
-        const converted = htmlDocx.asBlob(content);
-        saveAs(converted, 'Fiche_Projet_Ihsan.docx');
-    }
-</script>
+            // Conversion en Blob DOCX
+            const converted = htmlDocx.asBlob(content);
+            saveAs(converted, 'Fiche_Projet_Ihsan.docx');
+        }
+    </script>
 
 </body>
+
 </html>
